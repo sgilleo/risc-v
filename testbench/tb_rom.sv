@@ -1,6 +1,6 @@
 `timescale 1ns/1ns
 
-module tb_rom; 
+module tb_ROM; 
 	logic CLK;
 	logic [9:0] address;
 	logic [31:0] instruccion;

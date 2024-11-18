@@ -1,6 +1,6 @@
 `timescale 1ns/1ns
 
-module tb_banco_registros();
+module tb_REG();
 
 	logic CLK, RSTn, RegWrite;
 	logic [4:0] read_reg1, read_reg2, write_reg;

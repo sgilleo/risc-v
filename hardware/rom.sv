@@ -1,4 +1,4 @@
-module rom (
+module ROM (
     input logic [9:0] address,
     output logic [31:0] instruccion
 );
