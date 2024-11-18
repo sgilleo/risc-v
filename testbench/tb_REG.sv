@@ -8,7 +8,7 @@ module tb_REG();
 	
 	logic [31:0] tb_read_data1, tb_read_data2;
 
-	banco_registros DUV(
+	REG DUV(
 		.clk(CLK),
 		.rsta(RSTn),
 		.read_reg1(read_reg1),

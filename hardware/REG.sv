@@ -1,4 +1,4 @@
-module banco_registros (
+module REG (
 	input logic [4:0] read_reg1,
 	input logic [4:0] read_reg2,
 	input logic [4:0] write_reg,
