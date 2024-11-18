@@ -5,7 +5,7 @@ module tb_ROM;
 	logic [9:0] address;
 	logic [31:0] instruccion;
 
-	rom ROM(
+	ROM DUV(
 	 .address(address),
 	 .instruccion(instruccion)
 	);
