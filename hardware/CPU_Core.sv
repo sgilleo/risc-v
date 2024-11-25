@@ -10,7 +10,7 @@ module CPU_Core(
 	logic [1:0] AuipcLui;
 	logic [3:0] opcode;
 	logic [31:0] PC, Imm_gen, Instruction, op1, op2, read_data1, read_data2, write_data, ALU_result;
-	logic Branch, MemRead, MemtoReg, MemWrite, ALUSrc, RegWrite, Zero;
+	logic Branch, MemtoReg, ALUSrc, RegWrite, Zero;
 
 	ALU alu(
 		.opcode(opcode),
@@ -40,7 +40,7 @@ module CPU_Core(
 				Branch = 1'b0;
 				MemRead = 1'b0;
 				MemtoReg = 1'b0;
-				ALUOp = 3'000;
+				ALUOp = 3'b000;
 				MemWrite = 1'b0;
 				ALUSrc = 1'b0;
 				RegWrite = 1'b1;
@@ -66,7 +66,7 @@ module CPU_Core(
 				RegWrite = 1'b1;
 				AuipcLui = 2'd2;
 			end
-			7'0100011: begin //S-format
+			7'b0100011: begin //S-format
 				Branch = 1'b0;
 				MemRead = 1'b0;
 				MemtoReg = 1'b0;
@@ -76,7 +76,7 @@ module CPU_Core(
 				RegWrite = 1'b0;
 				AuipcLui = 2'd2;
 			end 
-			7'1100011: begin //B-format
+			7'b1100011: begin //B-format
 				Branch = 1'b1;
 				MemRead = 1'b0;
 				MemtoReg = 1'b0;
@@ -149,7 +149,7 @@ module CPU_Core(
 					4'b1101: opcode = 4'b1001;
 					4'b0110: opcode = 4'b0101;
 					4'b0111: opcode = 4'b0100;
-
+					default: opcode = 4'd0;
 				endcase
 
 			3'b001: //I
@@ -163,6 +163,7 @@ module CPU_Core(
 					4'bX001: opcode = 4'b0111;
 					4'b0101: opcode = 4'b1000;
 					4'b1101: opcode = 4'b1001;
+					default: opcode = 4'd0;
 				endcase
 
 		
@@ -188,9 +189,9 @@ module CPU_Core(
 	always_comb begin
 		
 		case (AuipcLui)
-			: op1 = PC;
-			: op1 = 32'd0;
-			: op1 = read_data1; 
+			2'd0: op1 = PC;
+			2'd1: op1 = 32'd0;
+			2'd2: op1 = read_data1; 
 			default: op1 = 32'd0;
 		endcase
 
@@ -201,7 +202,7 @@ module CPU_Core(
 		Instruction = data_IMEM;
 		address_DMEM = ALU_result[11:2];
 		address_IMEM = PC[11:2];
-		write_data_DMEM = read_data2
+		write_data_DMEM = read_data2;
 	end
 
 
