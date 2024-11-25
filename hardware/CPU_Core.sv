@@ -6,17 +6,12 @@ module CPU_Core(
 	output logic MemWrite, MemRead
 );
 
-<<<<<<< HEAD
-logic [3:0] opcode;
-
-		////////////////////////////////////////////// ALU CONTROL /////////////////////////////////////////////////////
-	always_comb begin 
-=======
+	logic [3:0] opcode;
 	logic [31:0] PC, Imm_gen, Instruction;
 	logic Branch, MemRead, MemtoReg, MemWrite, ALUSrc, RegWrite, Zero;
 
 	ALU alu(
-		.opcode(),
+		.opcode(opcode),
 		.op1(),
 		.op2(),
 		.res(),
@@ -65,9 +60,11 @@ logic [3:0] opcode;
 	end
 
 	assign Instruction = data_IMEM;
->>>>>>> e4a575a9b0015ec6e60543eadb5cdece9a18fccc
+
+		////////////////////////////////////////////// ALU CONTROL /////////////////////////////////////////////////////
+	always_comb begin
 	
-	 case(ALUOp)
+	case(ALUOp)
 
 		
 	2'b00:
