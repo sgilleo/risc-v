@@ -67,7 +67,7 @@ module CPU_Core(
 	case(ALUOp)
 
 		
-	2'b00:
+	3'b000: //R
 				case({Instruction[30], Instruction[14:12]})
 
 					4'b0000: opcode = 4'b0000;
@@ -83,7 +83,7 @@ module CPU_Core(
 
 				endcase
 
-	2'b01:
+	3'b001: //I
 			
 				casex({Instruction[30], Instruction[14:12]})
 					4'bX000: opcode = 4'b0000;
@@ -98,6 +98,21 @@ module CPU_Core(
 
 		endcase
 
+	3'b010: //L
+					
+		opcode = 4'b0000;
+		
+
+	3'b011: //S
+		
+		opcode = 4'b0000;
+
+
+	3'b100: //B
+		
+		opcode = 4'b0000;
+
+	default: opcode = 4'b0000;
 
 	end
 
