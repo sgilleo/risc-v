@@ -32,76 +32,75 @@ module CPU_Core(
 		.read_data2(read_data2)
 	);
 
-	always_comb begin //Control
+	///////////////////////////////// UNIDAD DE CONTROL ////////////////////////////////////////
+	always_comb begin
 		case(Instruction[6:0])
 			
 			7'b0110011: begin //R-format
-			Branch = 1'b0;
-			MemRead = 1'b0;
-			MemtoReg = 1'b0;
-			ALUOp = 3'000;
-			MemWrite = 1'b0;
-			ALUScr = 1'b0;
-			RegWrite = 1'b1;
-			AuipcLui = 2'b10;
+				Branch = 1'b0;
+				MemRead = 1'b0;
+				MemtoReg = 1'b0;
+				ALUOp = 3'000;
+				MemWrite = 1'b0;
+				ALUSrc = 1'b0;
+				RegWrite = 1'b1;
+				AuipcLui = 2'd2;
 			end 
 			7'b0010011: begin //I-format 
-			Branch = 1'b0;
-			MemRead = 1'b0;
-			MemtoReg = 1'b0;
-			ALUOp = 3'b001;
-			MemWrite = 1'b0;
-			ALUScr = 1'b1;
-			RegWrite = 1'b1;
-			AuipcLui = 2'b10;
+				Branch = 1'b0;
+				MemRead = 1'b0;
+				MemtoReg = 1'b0;
+				ALUOp = 3'b001;
+				MemWrite = 1'b0;
+				ALUSrc = 1'b1;
+				RegWrite = 1'b1;
+				AuipcLui = 2'd2;
 			end 
 			7'b0000011: begin //L-format
-			Branch = 1'b0;
-			MemRead = 1'b0;
-			MemtoReg = 1'b0;
-			ALUOp = 3'b010;
-			MemWrite = 1'b1;
-			ALUScr = 1'b1;
-			RegWrite = 1'b1;
-			AuipcLui = 2'b10;
+				Branch = 1'b0;
+				MemRead = 1'b1;
+				MemtoReg = 1'b1;
+				ALUOp = 3'b010;
+				MemWrite = 1'b0;
+				ALUSrc = 1'b1;
+				RegWrite = 1'b1;
+				AuipcLui = 2'd2;
 			end
 			7'0100011: begin //S-format
-			Branch = 1'b0;
-			MemRead = 1'b1;
-			MemtoReg = 1'b1;
-			ALUOp = 3'b011;
-			MemWrite = 1'b0;
-			ALUScr = 1'b1;
-			RegWrite = 1'b1;
-			AuipcLui = 2'b10;
+				Branch = 1'b0;
+				MemRead = 1'b0;
+				MemtoReg = 1'b0;
+				ALUOp = 3'b011;
+				MemWrite = 1'b1;
+				ALUSrc = 1'b1;
+				RegWrite = 1'b0;
+				AuipcLui = 2'd2;
 			end 
 			7'1100011: begin //B-format
-			Branch = 1'b1;
-			MemRead = 1'b0;
-			MemtoReg = 1'b0;
-			ALUOp = 3'b100;
-			MemWrite = 1'b0;
-			ALUScr = 1'b1;
-			RegWrite = 1'b1;
-			AuipcLui = 2'b10;
+				Branch = 1'b1;
+				MemRead = 1'b0;
+				MemtoReg = 1'b0;
+				ALUOp = 3'b100;
+				MemWrite = 1'b0;
+				ALUSrc = 1'b0;
+				RegWrite = 1'b0;
+				AuipcLui = 2'd2;
 			end 
 			
 			default:  begin 
-			Branch = 1'b0;
-			MemRead = 1'b0;
-			MemtoReg = 1'b0;
-			ALUOp = 2'b00;
-			MemWrite = 1'b0;
-			ALUScr = 1'b0;
-			RegWrite = 1'b0;
-			AuipcLui = 2'b00;
+				Branch = 1'b0;
+				MemRead = 1'b0;
+				MemtoReg = 1'b0;
+				ALUOp = 2'b00;
+				MemWrite = 1'b0;
+				ALUSrc = 1'b0; 
+				RegWrite = 1'b0;
+				AuipcLui = 2'b00;
 			end 
 		endcase	
 	end
 
-	
-
-
+	//////////////////////////////////////////////// PC //////////////////////////////////////
 	always_ff @(posedge CLK, negedge RSTn) begin
 
 		if(!RSTn) PC <= 32'd0;
@@ -200,7 +199,9 @@ module CPU_Core(
 		write_data = (MemtoReg)? data_DMEM: ALU_result;
 
 		Instruction = data_IMEM;
-		address_DMEM = ALU_result;
+		address_DMEM = ALU_result[11:2];
+		address_IMEM = PC[11:2];
+		write_data_DMEM = read_data2
 	end
 
 
