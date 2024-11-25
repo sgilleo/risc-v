@@ -91,7 +91,7 @@ module CPU_Core(
 					4'bX100: opcode = 4'b0110;
 					4'bX110: opcode = 4'b0101;
 					4'bX111: opcode = 4'b0100;
-					4'b0001: opcode = 4'b0111;
+					4'bX001: opcode = 4'b0111;
 					4'b0101: opcode = 4'b1000;
 					4'b1101: opcode = 4'b1001;
 				endcase
