@@ -6,80 +6,8 @@ module CPU_Core(
 	output logic MemWrite, MemRead
 );
 
-<<<<<<< HEAD
-logic [31:0] Instruccion;
-logic Branch,MemtoReg,ALUScr,RegWrite;
-logic[2:0] ALUOp;
-logic [1:0] AuipcLui;
-
-always_comb begin //Control
-case(Instruccion[6:0])
-	
-		7'b0110011: begin //R-format
-		Branch = 1'b0;
-		MemRead = 1'b0;
-		MemtoReg = 1'b0;
-		ALUOp = 3'000;
-		MemWrite = 1'b0;
-		ALUScr = 1'b0;
-		RegWrite = 1'b1;
-		AuipcLui = 2'b10;
-		end 
-		7'b0010011: begin //I-format 
-		Branch = 1'b0;
-		MemRead = 1'b0;
-		MemtoReg = 1'b0;
-		ALUOp = 3'b001;
-		MemWrite = 1'b0;
-		ALUScr = 1'b1;
-		RegWrite = 1'b1;
-		AuipcLui = 2'b10;
-		end 
-		7'b0000011: begin //L-format
-		Branch = 1'b0;
-		MemRead = 1'b0;
-		MemtoReg = 1'b0;
-		ALUOp = 3'b010;
-		MemWrite = 1'b1;
-		ALUScr = 1'b1;
-		RegWrite = 1'b1;
-		AuipcLui = 2'b10;
-		end
-		7'0100011: begin //S-format
-		Branch = 1'b0;
-		MemRead = 1'b1;
-		MemtoReg = 1'b1;
-		ALUOp = 3'b011;
-		MemWrite = 1'b0;
-		ALUScr = 1'b1;
-		RegWrite = 1'b1;
-		AuipcLui = 2'b10;
-		end 
-		7'1100011: begin //B-format
-		Branch = 1'b1;
-		MemRead = 1'b0;
-		MemtoReg = 1'b0;
-		ALUOp = 3'b100;
-		MemWrite = 1'b0;
-		ALUScr = 1'b1;
-		RegWrite = 1'b1;
-		AuipcLui = 2'b10;
-		end 
-		
-		default:  begin 
-		Branch = 1'b0;
-		MemRead = 1'b0;
-		MemtoReg = 1'b0;
-		ALUOp = 2'b00;
-		MemWrite = 1'b0;
-		ALUScr = 1'b0;
-		RegWrite = 1'b0;
-		AuipcLui = 2'b00;
-		end ;
-endcase
-	
-end
-=======
+	logic[2:0] ALUOp;
+	logic [1:0] AuipcLui;
 	logic [3:0] opcode;
 	logic [31:0] PC, Imm_gen, Instruction, op1, op2, read_data1, read_data2, write_data, ALU_result;
 	logic Branch, MemRead, MemtoReg, MemWrite, ALUSrc, RegWrite, Zero;
@@ -103,6 +31,75 @@ end
 		.read_data1(read_data1),
 		.read_data2(read_data2)
 	);
+
+	always_comb begin //Control
+		case(Instruction[6:0])
+			
+			7'b0110011: begin //R-format
+			Branch = 1'b0;
+			MemRead = 1'b0;
+			MemtoReg = 1'b0;
+			ALUOp = 3'000;
+			MemWrite = 1'b0;
+			ALUScr = 1'b0;
+			RegWrite = 1'b1;
+			AuipcLui = 2'b10;
+			end 
+			7'b0010011: begin //I-format 
+			Branch = 1'b0;
+			MemRead = 1'b0;
+			MemtoReg = 1'b0;
+			ALUOp = 3'b001;
+			MemWrite = 1'b0;
+			ALUScr = 1'b1;
+			RegWrite = 1'b1;
+			AuipcLui = 2'b10;
+			end 
+			7'b0000011: begin //L-format
+			Branch = 1'b0;
+			MemRead = 1'b0;
+			MemtoReg = 1'b0;
+			ALUOp = 3'b010;
+			MemWrite = 1'b1;
+			ALUScr = 1'b1;
+			RegWrite = 1'b1;
+			AuipcLui = 2'b10;
+			end
+			7'0100011: begin //S-format
+			Branch = 1'b0;
+			MemRead = 1'b1;
+			MemtoReg = 1'b1;
+			ALUOp = 3'b011;
+			MemWrite = 1'b0;
+			ALUScr = 1'b1;
+			RegWrite = 1'b1;
+			AuipcLui = 2'b10;
+			end 
+			7'1100011: begin //B-format
+			Branch = 1'b1;
+			MemRead = 1'b0;
+			MemtoReg = 1'b0;
+			ALUOp = 3'b100;
+			MemWrite = 1'b0;
+			ALUScr = 1'b1;
+			RegWrite = 1'b1;
+			AuipcLui = 2'b10;
+			end 
+			
+			default:  begin 
+			Branch = 1'b0;
+			MemRead = 1'b0;
+			MemtoReg = 1'b0;
+			ALUOp = 2'b00;
+			MemWrite = 1'b0;
+			ALUScr = 1'b0;
+			RegWrite = 1'b0;
+			AuipcLui = 2'b00;
+			end 
+		endcase	
+	end
+
+	
 
 
 	always_ff @(posedge CLK, negedge RSTn) begin
@@ -206,6 +203,5 @@ end
 		address_DMEM = ALU_result;
 	end
 
->>>>>>> 3e8b3b9fc1134780608646f5042f92b4d7be5200
 
 endmodule
