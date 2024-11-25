@@ -7,14 +7,14 @@ module CPU_Core(
 );
 
 	logic [3:0] opcode;
-	logic [31:0] PC, Imm_gen, Instruction;
+	logic [31:0] PC, Imm_gen, Instruction, op1, op2, read_data1, read_data2, write_data, ALU_result;
 	logic Branch, MemRead, MemtoReg, MemWrite, ALUSrc, RegWrite, Zero;
 
 	ALU alu(
 		.opcode(opcode),
-		.op1(),
-		.op2(),
-		.res(),
+		.op1(op1),
+		.op2(op2),
+		.res(ALU_result),
 		.zero(Zero)
 	);
 
@@ -22,12 +22,12 @@ module CPU_Core(
 		.CLK(CLK),
 		.RSTn(RSTn),
 		.RegWrite(RegWrite),
-		.read_reg1(),
-		.read_reg2(),
-		.write_reg(),
-		.write_data(),
-		.read_data1(),
-		.read_data2()
+		.read_reg1(Instruction[19:15]),
+		.read_reg2(Instruction[24:20]),
+		.write_reg(Instruction[11:7]),
+		.write_data(write_data),
+		.read_data1(read_data1),
+		.read_data2(read_data2)
 	);
 
 
@@ -59,7 +59,7 @@ module CPU_Core(
 
 	end
 
-	assign Instruction = data_IMEM;
+	
 
 		////////////////////////////////////////////// ALU CONTROL /////////////////////////////////////////////////////
 	always_comb begin
@@ -100,5 +100,23 @@ module CPU_Core(
 
 
 	end
+
+	always_comb begin
+		
+		case (AuipcLui)
+			: op1 = PC;
+			: op1 = 32'd0;
+			: op1 = read_data1; 
+			default: op1 = 32'd0;
+		endcase
+
+		op2 = (ALUSrc)? Imm_gen : read_data2;
+
+		write_data = (MemtoReg)? data_DMEM: ALU_result;
+
+		Instruction = data_IMEM;
+		address_DMEM = ALU_result;
+	end
+
 
 endmodule
