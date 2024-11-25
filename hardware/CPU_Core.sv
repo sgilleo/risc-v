@@ -64,10 +64,9 @@ module CPU_Core(
 		////////////////////////////////////////////// ALU CONTROL /////////////////////////////////////////////////////
 	always_comb begin
 	
-	case(ALUOp)
-
-		
-	3'b000: //R
+		case(ALUOp)
+			
+			3'b000: //R
 				case({Instruction[30], Instruction[14:12]})
 
 					4'b0000: opcode = 4'b0000;
@@ -83,8 +82,8 @@ module CPU_Core(
 
 				endcase
 
-	3'b001: //I
-			
+			3'b001: //I
+					
 				casex({Instruction[30], Instruction[14:12]})
 					4'bX000: opcode = 4'b0000;
 					4'bX010: opcode = 4'b0010;
@@ -96,24 +95,24 @@ module CPU_Core(
 					4'b1101: opcode = 4'b1001;
 				endcase
 
+		
+
+			3'b010: //L
+							
+				opcode = 4'b0000;
+				
+
+			3'b011: //S
+				
+				opcode = 4'b0000;
+
+
+			3'b100: //B
+				
+				opcode = 4'b0000;
+
+			default: opcode = 4'b0000;
 		endcase
-
-	3'b010: //L
-					
-		opcode = 4'b0000;
-		
-
-	3'b011: //S
-		
-		opcode = 4'b0000;
-
-
-	3'b100: //B
-		
-		opcode = 4'b0000;
-
-	default: opcode = 4'b0000;
-
 	end
 
 	always_comb begin
