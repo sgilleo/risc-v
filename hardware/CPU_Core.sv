@@ -6,5 +6,58 @@ module CPU_Core(
 	output logic MemWrite, MemRead
 );
 
+	logic [31:0] PC, Imm_gen, Instruction;
+	logic Branch, MemRead, MemtoReg, MemWrite, ALUSrc, RegWrite, Zero;
+
+	ALU alu(
+		.opcode(),
+		.op1(),
+		.op2(),
+		.res(),
+		.zero(Zero)
+	);
+
+	REG reg_bank(
+		.CLK(CLK),
+		.RSTn(RSTn),
+		.RegWrite(RegWrite),
+		.read_reg1(),
+		.read_reg2(),
+		.write_reg(),
+		.write_data(),
+		.read_data1(),
+		.read_data2()
+	);
+
+
+	always_ff @(posedge CLK, negedge RSTn) begin
+
+		if(!RSTn) PC <= 32'd0;
+
+		else begin
+			if(Branch && Zero) PC <= PC + Imm_gen;
+			else PC <= PC + 32'd4;
+		end
+
+	end
+
+	////////////////////////////////////////////////////// Imm_gen/////////////////////////////////////////////////////
+	always_comb begin 
+		
+		case (Instruction[6:0])
+			7'b0010011: Imm_gen = {Instruction[31], 20'd0, Instruction[30:20]}; //Instruccion tipo I 
+			7'b0000011: Imm_gen = {Instruction[31], 20'd0, Instruction[30:20]}; //Instruccion de carga (LW)
+			7'b0100011: Imm_gen = {Instruction[31], 20'd0 , Instruction[30:25], Instruction[11:7]}; //Instruccion tipo S
+			7'b1100011: Imm_gen = {Instruction[31], 19'd0, , Instruction[7], Instruction[30:25], Instruction[11:8], 1'b0}; //Instruccion tipo B
+			7'b0010111: Imm_gen = {Instruction[31:12], 12'd0}; //Instruccion tipo U (AUIPC)
+			7'b0110111: Imm_gen = {Instruction[31:12], 12'd0}; //Instruccion tipo U (LUI)
+			7'b1101111: Imm_gen = {Instruction[31], 11'd0, Instruction[19:12], Instruction[20], Instruction[30:21], 1'b0}; //Instruccion JAL
+			7'b1100111: Imm_gen = {Instruction[31], 20'd0, Instruction[30:20]}; //Instruccion JALR
+			default: Imm_gen = 32'd0;
+		endcase
+
+	end
+
+	assign Instruction = data_IMEM;
 	
 endmodule
