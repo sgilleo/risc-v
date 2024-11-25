@@ -1,9 +1,9 @@
-.text
+init:
 	addi x1, x0, 0 #Indice del bucle
    	add t0, x0, x0 #Elemento i-1
     addi t1, x0, 1 #Elemento i
-    lw x2, n #Cargar numero de elementos
-    la a0, output #Cargar dirección de guardado
+    addi x2, x0, 10 #Cargar numero de elementos de la secuencia de fibonacci (N)
+    addi a0, x0, 0x0A0 #Cargar dirección de guardado
     
     beq x2, x0, fin #Si N es 0 finalizar el programa
     sw t0, 0(a0) #Escribir el primer elemento (0) de la serie de Fibonacci
@@ -21,12 +21,6 @@ loop:
     
     addi x1, x1, 1 #Incrementar el indice
     j loop
+
     
 fin:
-
-
-.data
-n:
-	.word 5 #Numero N de numeros a obtener de la serie
-output:
-	#Espacio para la salida del programa
