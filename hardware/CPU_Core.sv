@@ -1,6 +1,6 @@
 module CPU_Core(
 	input logic CLK, RSTn,
-	input logic [31:0] data_IMEM, data_DMEM,
+	input logic [31:0] Instruction, data_DMEM,
 	output logic [9:0] address_IMEM, address_DMEM,
 	output logic [31:0] write_data_DMEM,
 	output logic MemWrite, MemRead
@@ -9,7 +9,7 @@ module CPU_Core(
 	logic[2:0] ALUOp;
 	logic [1:0] AuipcLui;
 	logic [3:0] opcode;
-	logic [31:0] PC, Imm_gen, Instruction, op1, op2, read_data1, read_data2, write_data, ALU_result;
+	logic [31:0] PC, Imm_gen, op1, op2, read_data1, read_data2, write_data, ALU_result;
 	logic Branch, MemtoReg, ALUSrc, RegWrite, Zero;
 
 	ALU alu(
@@ -199,7 +199,6 @@ module CPU_Core(
 
 		write_data = (MemtoReg)? data_DMEM: ALU_result;
 
-		Instruction = data_IMEM;
 		address_DMEM = ALU_result[11:2];
 		address_IMEM = PC[11:2];
 		write_data_DMEM = read_data2;
