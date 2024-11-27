@@ -1,7 +1,7 @@
 //Alejandro Bataller Sastre
 module RAM #(parameter address_width = 1024)
 (
-input CLK, MemWrite, //Memwrite senyal de habilitacion de escritura
+input CLK, MemWrite, MemRead, //Memwrite senyal de habilitacion de escritura
 input [31:0] write_data,
 input[$clog2(address_width)-1:0] address, 
 output [31:0] read_data
@@ -15,7 +15,7 @@ always_ff @(posedge CLK)
 	if (MemWrite)
 			memoria[address] <= write_data;
 
-assign read_data = memoria[address];
+assign read_data = (MemRead)? memoria[address]: 32'd0;
 
 
 endmodule 

@@ -2,7 +2,7 @@
 
 module tb_RAM();
 
-	logic CLK, MemWrite;
+	logic CLK, MemWrite, MemRead;
 	logic [31:0] write_data, read_data;
 	logic [9:0] address;
 	
@@ -12,6 +12,7 @@ module tb_RAM();
 	RAM DUV(
 		.CLK(CLK),
 		.MemWrite(MemWrite),
+		.MemRead(MemRead),
 		.write_data(write_data),
 		.address(address),
 		.read_data(read_data)
@@ -34,17 +35,19 @@ module tb_RAM();
 	
 	task read(input logic [9:0] tb_address, output logic [31:0] tb_data);
 		address = tb_address;
-		MemWrite = 1'b0;
+		MemRead = 1'b1;
 		@(posedge CLK);
 		tb_data = read_data;
 		@(negedge CLK);
 		address = 10'd0;
+		MemRead = 1'b0;
 		@(negedge CLK);
 	endtask
 	
 	initial begin
 		CLK = 1'b0;
 		MemWrite = 1'b0;
+		MemRead = 1'b0;
 		write_data = 32'd0;
 		address = 10'd0;
 		
