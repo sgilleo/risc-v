@@ -18,7 +18,7 @@ module RISCV(input logic CLK, RSTn);
         .instruction(Instruction)
     );
 
-    CPU_Core DUV(
+    CPU_Core cpu(
         .CLK(CLK), 
         .RSTn(RSTn),
         .Instruction(Instruction),
