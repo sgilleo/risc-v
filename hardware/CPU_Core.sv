@@ -119,7 +119,7 @@ module CPU_Core(
 			7'b0010011: Imm_gen = {Instruction[31], 20'd0, Instruction[30:20]}; //Instruccion tipo I 
 			7'b0000011: Imm_gen = {Instruction[31], 20'd0, Instruction[30:20]}; //Instruccion de carga (LW)
 			7'b0100011: Imm_gen = {Instruction[31], 20'd0 , Instruction[30:25], Instruction[11:7]}; //Instruccion tipo S
-			7'b1100011: Imm_gen = {Instruction[31], 19'd0, , Instruction[7], Instruction[30:25], Instruction[11:8], 1'b0}; //Instruccion tipo B
+			7'b1100011: Imm_gen = {Instruction[31], 19'd0, Instruction[7], Instruction[30:25], Instruction[11:8], 1'b0}; //Instruccion tipo B
 			7'b0010111: Imm_gen = {Instruction[31:12], 12'd0}; //Instruccion tipo U (AUIPC)
 			7'b0110111: Imm_gen = {Instruction[31:12], 12'd0}; //Instruccion tipo U (LUI)
 			7'b1101111: Imm_gen = {Instruction[31], 11'd0, Instruction[19:12], Instruction[20], Instruction[30:21], 1'b0}; //Instruccion JAL
@@ -170,19 +170,19 @@ module CPU_Core(
 
 			3'b010: //L
 							
-				opcode = 4'b0000;
+				opcode = 4'b0000; //ADD
 				
 
 			3'b011: //S
 				
-				opcode = 4'b0000;
+				opcode = 4'b0000; //ADD
 
 
 			3'b100: //B
 				
-				opcode = 4'b0000;
+				opcode = 4'b0001; //SUB
 
-			default: opcode = 4'b0000;
+			default: opcode = 4'b0000; //ADD
 		endcase
 	end
 
