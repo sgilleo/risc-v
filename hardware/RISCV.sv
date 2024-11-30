@@ -22,7 +22,7 @@ module RISCV(input logic CLK, RSTn);
         .CLK(CLK), 
         .RSTn(RSTn),
         .Instruction(Instruction),
-        .data_DMEM(),
+        .data_DMEM(data_DMEM),
         .address_IMEM(address_IMEM),
         .address_DMEM(address_DMEM),
         .write_data_DMEM(write_data_DMEM),
