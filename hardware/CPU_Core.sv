@@ -151,9 +151,22 @@ module CPU_Core(
 		if(!RSTn) PC <= 32'd0;
 
 		else begin
+
 			if(Branch && Zero) PC <= PC + Imm_gen;
+
+			else if (ALUOp == 1000)
+
+				PC = write_data_res;
+			
 			else PC <= PC + 32'd4;
 		end
+
+/*
+
+
+
+*/
+
 
 	end
 
@@ -269,13 +282,6 @@ module CPU_Core(
 
 			write_data = write_data_res;
 
-		if (ALUOp == 1000)
-
-			PC = write_data_res;
-
-			else
-
-			PC = PC + 32'd4;
 			
 		address_DMEM = ALU_result[11:2];
 		address_IMEM = PC[11:2];
