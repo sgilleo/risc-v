@@ -64,9 +64,7 @@ program Estimulos (CLK, RSTn, Instruction);
     endgroup
 
     covergroup ICover;
-        imm: coverpoint Instruction[31:20] {
-            bins b_imm[] = {[-2048:2047]};
-        }
+        imm: coverpoint Instruction[31:20];
         rs1: coverpoint Instruction[19:15];
         rd: coverpoint Instruction[11:7];
         operation: coverpoint Instruction[14:12] {
@@ -82,17 +80,13 @@ program Estimulos (CLK, RSTn, Instruction);
     endgroup
 
     covergroup LCover;
-        imm: coverpoint Instruction[31:20] {
-            bins b_imm[] = {[-2048:2047]};
-        }
+        imm: coverpoint Instruction[31:20];
         rs1: coverpoint Instruction[19:15];
         rd: coverpoint Instruction[11:7];
     endgroup
 
     covergroup SCover;
-        imm: coverpoint {Instruction[31:25], Instruction[11:7]} {
-            bins b_imm[] = {[-2048:2047]};
-        }
+        imm: coverpoint {Instruction[31:25], Instruction[11:7]};
         rs2: coverpoint Instruction[24:20];
         rs1: coverpoint Instruction[19:15];
     endgroup
@@ -130,31 +124,31 @@ program Estimulos (CLK, RSTn, Instruction);
 
              @(posedge CLK);
 
-            assert (Instruction[19:15] == duv.Instruction[19:15]) $display("El registro de lectura 1 SÍ es correcto"); else $display("El registro de lectura 1 no es correcto");
-            assert (Instruction[24:20] == duv.Instruction[24:20]) else $display("El registro de lectura 2 no es correcto");
-            assert (Instruction[11:7] == duv.Instruction[11:7]) else $display("El registro de escritura no es correcto");
-            assert (duv.Branch == 1'b0) else $display("Ha fallado la señal Branch de la unidad de control");
-            assert (duv.MemRead == 1'b0) else $display("Ha fallado la señal MemRead de la unidad de control");
-            assert (duv.MemtoReg == 1'b0) else $display("Ha fallado la señal MemtoReg de la unidad de control");
-            assert (duv.ALUOp == 3'b000) else $display("Ha fallado la señal ALUOp de la unidad de control");
-            assert (duv.MemWrite == 1'b0) else $display("Ha fallado la señal MemWrite de la unidad de control");
-            assert (duv.ALUSrc == 1'b0) else $display("Ha fallado la señal ALUSrc de la unidad de control");
-            assert (duv.RegWrite == 1'b1) else $display("Ha fallado la señal RegWrite de la unidad de control");
-            assert (duv.AuipcLui == 2'd2) else $display("Ha fallado la señal AuipcLuide la unidad de control");
+            assert (Instruction[19:15] == DUV.Instruction[19:15]) else $display("El registro de lectura 1 no es correcto");
+            assert (Instruction[24:20] == DUV.Instruction[24:20]) else $display("El registro de lectura 2 no es correcto");
+            assert (Instruction[11:7] == DUV.Instruction[11:7]) else $display("El registro de escritura no es correcto");
+            assert (DUV.Branch == 1'b0) else $display("Ha fallado la señal Branch de la unidad de control");
+            assert (DUV.MemRead == 1'b0) else $display("Ha fallado la señal MemRead de la unidad de control");
+            assert (DUV.MemtoReg == 2'd0) else $display("Ha fallado la señal MemtoReg de la unidad de control");
+            assert (DUV.ALUOp == 3'b000) else $display("Ha fallado la señal ALUOp de la unidad de control");
+            assert (DUV.ALUToPC == 1'b0) else $display("Ha fallado la señal ALUToPC de la unidad de control");
+            assert (DUV.MemWrite == 1'b0) else $display("Ha fallado la señal MemWrite de la unidad de control");
+            assert (DUV.ALUSrc == 1'b0) else $display("Ha fallado la señal ALUSrc de la unidad de control");
+            assert (DUV.RegWrite == 1'b1) else $display("Ha fallado la señal RegWrite de la unidad de control");
+            assert (DUV.AuipcLui == 2'd2) else $display("Ha fallado la señal AuipcLuide la unidad de control");
             
             case({Instruction[30], Instruction[14:12]})
 
-                4'b0000: assert(duv.opcode == 4'b0000) else $display("El código de operación no ha coincidido");
-                4'b1000: assert(duv.opcode == 4'b0001) else $display("El código de operación no ha coincidido");
-                4'b0001: assert(duv.opcode == 4'b0010) else $display("El código de operación no ha coincidido");
-                4'b0010: assert(duv.opcode == 4'b0011) else $display("El código de operación no ha coincidido");
-                4'b0011: assert(duv.opcode == 4'b0100) else $display("El código de operación no ha coincidido");
-                4'b0100: assert(duv.opcode == 4'b0110) else $display("El código de operación no ha coincidido");
-                4'b0101: assert(duv.opcode == 4'b1000) else $display("El código de operación no ha coincidido");
-                4'b1101: assert(duv.opcode == 4'b1001) else $display("El código de operación no ha coincidido");
-                4'b0110: assert(duv.opcode == 4'b0101) else $display("El código de operación no ha coincidido");
-                4'b0111: assert(duv.opcode == 4'b0100) else $display("El código de operación no ha coincidido");
-                default: assert(duv.opcode == 4'd0);
+                4'b0000: assert(DUV.opcode == 4'b0000) else $display("El código de operación no ha coincidido");
+                4'b1000: assert(DUV.opcode == 4'b0001) else $display("El código de operación no ha coincidido");
+                4'b0001: assert(DUV.opcode == 4'b0010) else $display("El código de operación no ha coincidido");
+                4'b0010: assert(DUV.opcode == 4'b0011) else $display("El código de operación no ha coincidido");
+                4'b0011: assert(DUV.opcode == 4'b0100) else $display("El código de operación no ha coincidido");
+                4'b0100: assert(DUV.opcode == 4'b0110) else $display("El código de operación no ha coincidido");
+                4'b0101: assert(DUV.opcode == 4'b1000) else $display("El código de operación no ha coincidido");
+                4'b1101: assert(DUV.opcode == 4'b1001) else $display("El código de operación no ha coincidido");
+                4'b0110: assert(DUV.opcode == 4'b0101) else $display("El código de operación no ha coincidido");
+                4'b0111: assert(DUV.opcode == 4'b0100) else $display("El código de operación no ha coincidido");
             endcase
 
             @(negedge CLK);
@@ -169,6 +163,31 @@ program Estimulos (CLK, RSTn, Instruction);
 
             Instruction = iinst.inst;
             icov.sample();
+
+            @(posedge CLK);
+
+            assert (Instruction[19:15] == DUV.Instruction[19:15]) else $display("El registro de lectura 1 no es correcto");
+            assert ({Instruction[31], 20'd0, Instruction[30:20]} == DUV.Imm_gen) else $display("Ha fallado el generador de inmediatos");
+            assert (Instruction[11:7] == DUV.Instruction[11:7]) else $display("El registro de escritura no es correcto");
+            assert (DUV.Branch == 1'b0) else $display("Ha fallado la señal Branch de la unidad de control");
+            assert (DUV.ALUToPC == 1'b0) else $display("Ha fallado la señal ALUToPC de la unidad de control");
+            assert (DUV.MemRead == 1'b0) else $display("Ha fallado la señal MemRead de la unidad de control");
+            assert (DUV.MemtoReg == 2'd0) else $display("Ha fallado la señal MemtoReg de la unidad de control");
+            assert (DUV.ALUOp == 3'b001) else $display("Ha fallado la señal ALUOp de la unidad de control");
+            assert (DUV.MemWrite == 1'b0) else $display("Ha fallado la señal MemWrite de la unidad de control");
+            assert (DUV.ALUSrc == 1'b1) else $display("Ha fallado la señal ALUSrc de la unidad de control");
+            assert (DUV.RegWrite == 1'b1) else $display("Ha fallado la señal RegWrite de la unidad de control");
+            assert (DUV.AuipcLui == 2'd2) else $display("Ha fallado la señal AuipcLuide la unidad de control");
+
+            case(Instruction[14:12])
+
+                3'b000: assert(DUV.opcode == 4'b0000) else $display("El código de operación no ha coincidido");
+                3'b010: assert(DUV.opcode == 4'b0010) else $display("El código de operación no ha coincidido");
+                3'b100: assert(DUV.opcode == 4'b0110) else $display("El código de operación no ha coincidido");
+                3'b110: assert(DUV.opcode == 4'b0101) else $display("El código de operación no ha coincidido");
+                3'b111: assert(DUV.opcode == 4'b0100) else $display("El código de operación no ha coincidido");
+                3'b001: assert(DUV.opcode == 4'b0111) else $display("El código de operación no ha coincidido");
+            endcase
 
             @(negedge CLK);
         end
@@ -231,13 +250,13 @@ program Estimulos (CLK, RSTn, Instruction);
 
         repeat(3) @(negedge CLK);
 
+        test_R; $display("Instrucciones tipo R comprobadas");
+
+        repeat(500) @(negedge CLK);
+
         test_I; $display("Instrucciones tipo I comprobadas");
 
         Instruction = 31'd0;
-        repeat(500) @(negedge CLK);
-
-        test_R; $display("Instrucciones tipo R comprobadas");
-
         repeat(500) @(negedge CLK);
 
         test_L; $display("Instrucciones tipo L comprobadas");
@@ -261,7 +280,7 @@ module tb_CPU_Core();
     logic [9:0] address_DMEM, address_IMEM;
     logic [31:0] Instruction, data_DMEM, write_data_DMEM;
 
-    CPU_Core duv(
+    CPU_Core DUV(
         .CLK(CLK), 
         .RSTn(RSTn),
         .Instruction(Instruction),
