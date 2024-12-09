@@ -9,7 +9,7 @@ module CPU_Core(
 	logic[2:0] ALUOp;
 	logic [1:0] AuipcLui;
 	logic [3:0] opcode;
-	logic [31:0] PC,PC_res, Imm_gen, op1, op2, read_data1, read_data2, write_data, ALU_result,write_data_res;
+	logic [31:0] PC,PC, Imm_gen, op1, op2, read_data1, read_data2, write_data, ALU_result,write_data_res;
 	logic Branch, MemtoReg, ALUSrc, RegWrite, Zero;
 	
 
@@ -148,11 +148,11 @@ module CPU_Core(
 	//////////////////////////////////////////////// PC //////////////////////////////////////
 	always_ff @(posedge CLK, negedge RSTn) begin
 
-		if(!RSTn) PC_res <= 32'd0;
+		if(!RSTn) PC <= 32'd0;
 
 		else begin
-			if(Branch && Zero) PC_res <= PC_res + Imm_gen;
-			else PC_res <= PC_res + 32'd4;
+			if(Branch && Zero) PC <= PC + Imm_gen;
+			else PC <= PC + 32'd4;
 		end
 
 	end
@@ -251,7 +251,7 @@ module CPU_Core(
 	always_comb begin
 		
 		case (AuipcLui)
-			2'd0: op1 = PC_res;
+			2'd0: op1 = PC;
 			2'd1: op1 = 32'd0;
 			2'd2: op1 = read_data1; 
 			default: op1 = 32'd0;
@@ -263,7 +263,7 @@ module CPU_Core(
 
 		if (ALUOp == 4'b0111 || ALUOp == 4'b1000)
 		
-			write_data = PC_res + 32'd4;
+			write_data = PC + 32'd4;
 
 			else 
 
@@ -275,7 +275,7 @@ module CPU_Core(
 
 			else
 
-			PC = PC_res;
+			PC = PC + 32'd4;
 			
 		address_DMEM = ALU_result[11:2];
 		address_IMEM = PC[11:2];
