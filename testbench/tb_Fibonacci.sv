@@ -55,7 +55,7 @@ module tb_Fibonacci();
 
         reset();
 
-        repeat(3000) @(negedge CLK);
+        wait(Instruction == 32'd0);
         
         $stop();
 
