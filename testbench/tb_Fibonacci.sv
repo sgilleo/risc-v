@@ -1,4 +1,8 @@
-module RISCV(input logic CLK, RSTn);
+`timescale 1ns/1ns
+
+module tb_CPU();
+
+    logic CLK, RSTn;
 
     logic MemWrite, MemRead;
     logic [9:0] address_DMEM, address_IMEM;
@@ -18,7 +22,7 @@ module RISCV(input logic CLK, RSTn);
         .instruction(Instruction)
     );
 
-    CPU_Core cpu(
+    CPU_Core DUV(
         .CLK(CLK), 
         .RSTn(RSTn),
         .Instruction(Instruction),
@@ -29,5 +33,33 @@ module RISCV(input logic CLK, RSTn);
         .MemWrite(MemWrite),
         .MemRead(MemRead)
     );
+
+    localparam T = 20;
+	
+	always
+	begin
+		#(T/2) CLK = ~CLK;
+	end
+
+    task reset;
+		@(negedge CLK);
+		RSTn = 1'b0;
+		@(negedge CLK);
+		RSTn = 1'b1;
+		@(negedge CLK); //1 ciclo de espera
+	endtask
+
+    initial begin
+        CLK = 1'b0;
+        RSTn = 1'b1;
+
+        reset();
+
+        repeat(300) @(negedge CLK);
+        
+        $stop();
+
+    end
+
 
 endmodule
