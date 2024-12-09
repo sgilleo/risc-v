@@ -1,6 +1,6 @@
 `timescale 1ns/1ns
 
-module tb_Fibonacci();
+module tb_Sorting();
 
     logic CLK, RSTn;
 
