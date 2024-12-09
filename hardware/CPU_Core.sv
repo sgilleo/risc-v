@@ -99,7 +99,7 @@ module CPU_Core(
 				AuipcLui = 2'd0;
 			end 
 
-			7'b1100011: begin //LUI
+			7'b0110111: begin //LUI
 				Branch = 1'b0;
 				MemRead = 1'b0;
 				MemtoReg = 1'b0;
@@ -121,7 +121,7 @@ module CPU_Core(
 				AuipcLui = 2'd1;
 			end 
 
-			7'b1100011: begin //JALR
+			7'b1100111: begin //JALR
 				Branch = 1'b1;
 				MemRead = 1'b0;
 				MemtoReg = 1'b0;
@@ -261,7 +261,7 @@ module CPU_Core(
 
 		write_data_res = (MemtoReg)? data_DMEM: ALU_result;
 
-		if (ALUOp == (0111|1000))
+		if (ALUOp == 4'b0111 || ALUOp == 4'b1000)
 		
 			write_data = PC_res + 32'd4;
 
