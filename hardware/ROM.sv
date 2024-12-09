@@ -6,7 +6,7 @@ module ROM #(parameter address_width=1024) (
 logic [31:0] memoria[(address_width-1):0];
 
 initial
-	$readmemh("ROM.hex",memoria);
+	$readmemh("D:\\UNIVERSIDAD\\3TELECO\\ISDIGI\\risc-v\\hardware\\ROM.hex",memoria);
 
 assign instruction=memoria[address];
 endmodule
