@@ -17,7 +17,7 @@ module tb_Fibonacci();
         .read_data(data_DMEM)
     );
 
-    ROM rom(
+    ROM #(.file("D:\\UNIVERSIDAD\\3TELECO\\ISDIGI\\risc-v\\assembly\\Fibonacci.hex")) rom(
         .address(address_IMEM),
         .instruction(Instruction)
     );
