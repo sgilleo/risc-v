@@ -231,8 +231,13 @@ module CPU_Core(
 				
 
 			3'b100: //B
+
+				case (Instruction[14:12])
+					3'b000: opcode = 4'b0001; //BEQ
+					3'b101: opcode = 4'b0011: //BGE
+				endcase
 				
-				opcode = 4'b0001; //SUB
+				
 			
 
 			3'b101: //JAL
