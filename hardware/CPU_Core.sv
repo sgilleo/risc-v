@@ -77,7 +77,7 @@ module CPU_Core(
 				RegWrite = 1'b0;
 				AuipcLui = 2'd2;
 			end 
-			7'b1100011: begin //B-format
+			7'b1100111: begin //B-format
 				Branch = 1'b1;
 				MemRead = 1'b0;
 				MemtoReg = 1'b0;
@@ -99,7 +99,7 @@ module CPU_Core(
 				AuipcLui = 2'd0;
 			end 
 
-			7'b1100011: begin //LUI
+			7'b0110111: begin //LUI
 				Branch = 1'b0;
 				MemRead = 1'b0;
 				MemtoReg = 1'b0;
@@ -121,7 +121,7 @@ module CPU_Core(
 				AuipcLui = 2'd1;
 			end 
 
-			7'b1100011: begin //JALR
+			7'b1100111: begin //JALR
 				Branch = 1'b1;
 				MemRead = 1'b0;
 				MemtoReg = 1'b0;
@@ -275,7 +275,7 @@ module CPU_Core(
 
 			else
 
-			PC = PC_res
+			PC = PC_res;
 			
 		address_DMEM = ALU_result[11:2];
 		address_IMEM = PC[11:2];
