@@ -58,12 +58,12 @@ if:
 	add x3, x0, x2 #Direccion minima igual a j
 end_if:
 	addi x2, x2, 4
-    beq x0, x0, inner_loop
+    jal x0, inner_loop
 inner_loop_end:
 
 	sw x6, 0(x1) #Intercambiar valores
     sw x4, 0(x3)
 
 	addi x1, x1, 4
-    beq x0, x0, loop
+    jal x0, loop
 end:

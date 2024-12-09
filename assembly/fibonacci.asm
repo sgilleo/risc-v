@@ -30,7 +30,7 @@ loop:
     addi a0, a0, 4 #Sumar el desplazamiento de la dirección de guardado
     
     addi x1, x1, 1 #Incrementar el indice
-    beq x0, x0, loop
+    jal x0, loop
 
     
 fin:
