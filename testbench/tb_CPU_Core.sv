@@ -71,7 +71,7 @@ program Estimulos (CLK, RSTn, Instruction);
         rd: coverpoint Instruction[11:7];
         operation: coverpoint Instruction[14:12] {
             bins b_addi = {3'b000};
-            bins b_slti = {3'b010};
+            bins b_slti = {3'b010}; 
             bins b_xori = {3'b100};
             bins b_ori = {3'b110};
             bins b_andi = {3'b111};
@@ -130,7 +130,7 @@ program Estimulos (CLK, RSTn, Instruction);
 
              @(posedge CLK);
 
-            assert (Instruction[19:15] == duv.Instruction[19:15]) else $display("El registro de lectura 1 no es correcto");
+            assert (Instruction[19:15] == duv.Instruction[19:15]) $display("El registro de lectura 1 SÍ es correcto"); else $display("El registro de lectura 1 no es correcto");
             assert (Instruction[24:20] == duv.Instruction[24:20]) else $display("El registro de lectura 2 no es correcto");
             assert (Instruction[11:7] == duv.Instruction[11:7]) else $display("El registro de escritura no es correcto");
             assert (duv.Branch == 1'b0) else $display("Ha fallado la señal Branch de la unidad de control");
@@ -261,7 +261,7 @@ module tb_CPU_Core();
     logic [9:0] address_DMEM, address_IMEM;
     logic [31:0] Instruction, data_DMEM, write_data_DMEM;
 
-    CPU_Core DUV(
+    CPU_Core duv(
         .CLK(CLK), 
         .RSTn(RSTn),
         .Instruction(Instruction),

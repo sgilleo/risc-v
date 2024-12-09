@@ -55,7 +55,7 @@ module tb_CPU();
 
         reset();
 
-        repeat(300) @(negedge CLK);
+        repeat(3000) @(negedge CLK);
         
         $stop();
 
