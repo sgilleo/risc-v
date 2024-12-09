@@ -1,31 +1,36 @@
 init: #Inicializar los valores en la memoria
 	addi x1, x0, 0x000 #Cargar la direccion de memoria inicial (Indice i)
     
-    addi x2, x0, 123
+    addi x2, x0, 9
     sw x2, 0(x1)
 	
-    addi x2, x0, 42
+    addi x2, x0, 4
     sw x2, 4(x1)
     
-    addi x2, x0, 12
+    addi x2, x0, 6
     sw x2, 8(x1)
     
-    addi x2, x0, 87
+    addi x2, x0, 1
     sw x2, 12(x1)
-    
-    addi x2, x0, 32
+
+    addi x2, x0, 5
     sw x2, 16(x1)
     
-    addi x2, x0, 3
+    addi x2, x0, 7
     sw x2, 20(x1)
     
-    addi x2, x0, 64
+    addi x2, x0, 8
     sw x2, 24(x1)
     
-	addi x2, x0, 0 #Fin de los datos
+    addi x2, x0, 2
     sw x2, 28(x1)
-    
 
+    addi x2, x0, 3
+    sw x2, 32(x1)
+    
+	addi x2, x0, 0 #Fin de los datos
+    sw x2, 36(x1)
+    
 
 
 #x1: Direccion i
