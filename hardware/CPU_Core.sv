@@ -261,7 +261,7 @@ module CPU_Core(
 
 		write_data_res = (MemtoReg)? data_DMEM: ALU_result;
 
-		if (ALUOp == (0111|1000))
+		if (ALUOp == 4'b0111 || ALUOp == 4'b1000)
 		
 			write_data = PC_res + 32'd4;
 
