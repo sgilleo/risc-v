@@ -275,7 +275,7 @@ module CPU_Core(
 
 			else
 
-			PC = PC_res
+			PC = PC_res;
 			
 		address_DMEM = ALU_result[11:2];
 		address_IMEM = PC[11:2];
