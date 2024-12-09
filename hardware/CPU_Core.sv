@@ -9,9 +9,8 @@ module CPU_Core(
 	logic[2:0] ALUOp;
 	logic [1:0] AuipcLui;
 	logic [3:0] opcode;
-	logic [31:0] PC, Imm_gen, op1, op2, read_data1, read_data2, write_data, ALU_result,write_data_res;
-	logic Branch, MemtoReg, ALUSrc, RegWrite, Zero;
-	
+	logic [31:0] PC, Imm_gen, op1, op2, read_data1, read_data2, write_data, ALU_result;
+	logic Branch, MemtoReg, ALUSrc, RegWrite, Zero, ALUToPC;
 
 	ALU alu(
 		.opcode(opcode),
@@ -40,8 +39,9 @@ module CPU_Core(
 			7'b0110011: begin //R-format
 				Branch = 1'b0;
 				MemRead = 1'b0;
-				MemtoReg = 1'b0;
-				ALUOp = 4'b0000;
+				MemtoReg = 2'd0;
+				ALUOp = 3'b000;
+				ALUToPC = 1'b0;
 				MemWrite = 1'b0;
 				ALUSrc = 1'b0;
 				RegWrite = 1'b1;
@@ -50,8 +50,9 @@ module CPU_Core(
 			7'b0010011: begin //I-format 
 				Branch = 1'b0;
 				MemRead = 1'b0;
-				MemtoReg = 1'b0;
-				ALUOp = 4'b0001;
+				MemtoReg = 2'd0;
+				ALUOp = 3'b001;
+				ALUToPC = 1'b0;
 				MemWrite = 1'b0;
 				ALUSrc = 1'b1;
 				RegWrite = 1'b1;
@@ -60,8 +61,9 @@ module CPU_Core(
 			7'b0000011: begin //L-format
 				Branch = 1'b0;
 				MemRead = 1'b1;
-				MemtoReg = 1'b1;
-				ALUOp = 4'b0010;
+				MemtoReg = 2'd1;
+				ALUOp = 3'b010;
+				ALUToPC = 1'b0;
 				MemWrite = 1'b0;
 				ALUSrc = 1'b1;
 				RegWrite = 1'b1;
@@ -70,29 +72,32 @@ module CPU_Core(
 			7'b0100011: begin //S-format
 				Branch = 1'b0;
 				MemRead = 1'b0;
-				MemtoReg = 1'b0;
-				ALUOp = 4'b0011;
+				MemtoReg = 2'd0;
+				ALUOp = 3'b010;
+				ALUToPC = 1'b0;
 				MemWrite = 1'b1;
 				ALUSrc = 1'b1;
 				RegWrite = 1'b0;
 				AuipcLui = 2'd2;
 			end 
-			7'b1100111: begin //B-format
+			7'b1100011: begin //B-format
 				Branch = 1'b1;
 				MemRead = 1'b0;
-				MemtoReg = 1'b0;
-				ALUOp = 4'b0100;
+				MemtoReg = 2'd0;
+				ALUOp = 3'b100;
+				ALUToPC = 1'b0;
 				MemWrite = 1'b0;
 				ALUSrc = 1'b0;
 				RegWrite = 1'b0;
 				AuipcLui = 2'd2;
-			end 
+			end
 
 			7'b0010111: begin //AUIPC
 				Branch = 1'b0;
 				MemRead = 1'b0;
-				MemtoReg = 1'b0;
-				ALUOp = 4'b0101;
+				MemtoReg = 2'd0;
+				ALUOp = 3'b010;
+				ALUToPC = 1'b0;
 				MemWrite = 1'b0;
 				ALUSrc = 1'b1;
 				RegWrite = 1'b1;
@@ -102,8 +107,9 @@ module CPU_Core(
 			7'b0110111: begin //LUI
 				Branch = 1'b0;
 				MemRead = 1'b0;
-				MemtoReg = 1'b0;
-				ALUOp = 4'b0110;
+				MemtoReg = 2'd0;
+				ALUOp = 3'b010;
+				ALUToPC = 1'b0;
 				MemWrite = 1'b0;
 				ALUSrc = 1'b1;
 				RegWrite = 1'b1;
@@ -113,8 +119,9 @@ module CPU_Core(
 			7'b1101111: begin // JAL
 				Branch = 1'b1;
 				MemRead = 1'b0;
-				MemtoReg = 1'b0;
-				ALUOp = 4'b0111;
+				MemtoReg = 2'd2;
+				ALUOp = 3'b101;
+				ALUToPC = 1'b0;
 				MemWrite = 1'b0;
 				ALUSrc = 1'b0;
 				RegWrite = 1'b1;
@@ -124,8 +131,9 @@ module CPU_Core(
 			7'b1100111: begin //JALR
 				Branch = 1'b1;
 				MemRead = 1'b0;
-				MemtoReg = 1'b0;
-				ALUOp = 4'b1000;
+				MemtoReg = 2'd0;
+				ALUOp = 3'b010;
+				ALUToPC = 1'b1;
 				MemWrite = 1'b0;
 				ALUSrc = 1'b1;
 				RegWrite = 1'b1;
@@ -135,8 +143,9 @@ module CPU_Core(
 			default:  begin 
 				Branch = 1'b0;
 				MemRead = 1'b0;
-				MemtoReg = 1'b0;
-				ALUOp = 3'b000;
+				MemtoReg = 2'd0;
+				ALUOp = 2'b00;
+				ALUToPC = 1'b0;
 				MemWrite = 1'b0;
 				ALUSrc = 1'b0; 
 				RegWrite = 1'b0;
@@ -151,22 +160,13 @@ module CPU_Core(
 		if(!RSTn) PC <= 32'd0;
 
 		else begin
-
-			if(Branch && Zero) PC <= PC + Imm_gen;
-
-			else if (ALUOp == 1000)
-
-				PC = write_data_res;
-			
-			else PC <= PC + 32'd4;
+			case ({Branch & Zero, ALUToPC})
+				2'b00: PC <= PC + 32'd4;
+				2'b10: PC <= PC + Imm_gen;
+				2'bX1: PC <= ALU_result;
+				default: PC <= PC + 32'd4;
+			endcase
 		end
-
-/*
-
-
-
-*/
-
 
 	end
 
@@ -194,7 +194,7 @@ module CPU_Core(
 	
 		case(ALUOp)
 			
-			4'b0000: //R
+			3'b000: //R
 				case({Instruction[30], Instruction[14:12]})
 
 					4'b0000: opcode = 4'b0000;
@@ -210,7 +210,7 @@ module CPU_Core(
 					default: opcode = 4'd0;
 				endcase
 
-			4'b0001: //I
+			3'b001: //I
 					
 				casex({Instruction[30], Instruction[14:12]})
 					4'bX000: opcode = 4'b0000;
@@ -224,38 +224,21 @@ module CPU_Core(
 					default: opcode = 4'd0;
 				endcase
 
-		
 
-			4'b0010: //L
+			3'b010: //L, S, AUIPC, LUI, JALR
 							
 				opcode = 4'b0000; //ADD
 				
 
-			4'b0011: //S
-				
-				opcode = 4'b0000; //ADD
-
-
-			4'b0100: //B
+			3'b100: //B
 				
 				opcode = 4'b0001; //SUB
+			
 
-			4'b0101: //AUIPC
-				
-				opcode = 4'b0000; //ADD
-
-			4'b0110: //LUI
-				
-				opcode = 4'b0000; //ADD
-
-
-			4'b0111: //JAL
+			3'b101: //JAL
 				
 				opcode = 4'b0100; //AND
 
-			4'b1000: //JALR
-				
-				opcode = 4'b0000; //ADD
 
 			default: opcode = 4'b0000; //ADD
 		endcase
@@ -272,17 +255,13 @@ module CPU_Core(
 
 		op2 = (ALUSrc)? Imm_gen : read_data2;
 
-		write_data_res = (MemtoReg)? data_DMEM: ALU_result;
+		case (MemtoReg)
+			2'd0: write_data = ALU_result;
+			2'd1: write_data = data_DMEM;
+			2'd2: write_data = PC + 32'd4;
+			default: write_data = 32'd0;
+		endcase
 
-		if (ALUOp == 4'b0111 || ALUOp == 4'b1000)
-		
-			write_data = PC + 32'd4;
-
-			else 
-
-			write_data = write_data_res;
-
-			
 		address_DMEM = ALU_result[11:2];
 		address_IMEM = PC[11:2];
 		write_data_DMEM = read_data2;
