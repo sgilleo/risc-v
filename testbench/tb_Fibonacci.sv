@@ -1,6 +1,6 @@
 `timescale 1ns/1ns
 
-module tb_CPU();
+module tb_Fibonacci();
 
     logic CLK, RSTn;
 
