@@ -1,9 +1,9 @@
 module CPU_Core(
 	input logic CLK, RSTn,
-	input logic [31:0] Instruction, data_DMEM,
-	output logic [9:0] address_IMEM, address_DMEM,
-	output logic [31:0] write_data_DMEM,
-	output logic MemWrite, MemRead
+	input logic [31:0] idata, ddata_r,
+	output logic [9:0] iaddr, daddr,
+	output logic [31:0] ddata_w,
+	output logic d_w, d_r
 );
 
 	logic[2:0] ALUOp;
@@ -24,9 +24,9 @@ module CPU_Core(
 		.CLK(CLK),
 		.RSTn(RSTn),
 		.RegWrite(RegWrite),
-		.read_reg1(Instruction[19:15]),
-		.read_reg2(Instruction[24:20]),
-		.write_reg(Instruction[11:7]),
+		.read_reg1(idata[19:15]),
+		.read_reg2(idata[24:20]),
+		.write_reg(idata[11:7]),
 		.write_data(write_data),
 		.read_data1(read_data1),
 		.read_data2(read_data2)
@@ -34,7 +34,7 @@ module CPU_Core(
 
 	///////////////////////////////// UNIDAD DE CONTROL ////////////////////////////////////////
 	always_comb begin
-		case(Instruction[6:0])
+		case(idata[6:0])
 			
 			7'b0110011: begin //R-format
 				Branch = 1'b0;
@@ -42,7 +42,7 @@ module CPU_Core(
 				MemtoReg = 2'd0;
 				ALUOp = 3'b000;
 				ALUToPC = 1'b0;
-				MemWrite = 1'b0;
+				d_w = 1'b0;
 				ALUSrc = 1'b0;
 				RegWrite = 1'b1;
 				AuipcLui = 2'd2;
@@ -53,7 +53,7 @@ module CPU_Core(
 				MemtoReg = 2'd0;
 				ALUOp = 3'b001;
 				ALUToPC = 1'b0;
-				MemWrite = 1'b0;
+				d_w = 1'b0;
 				ALUSrc = 1'b1;
 				RegWrite = 1'b1;
 				AuipcLui = 2'd2;
@@ -64,7 +64,7 @@ module CPU_Core(
 				MemtoReg = 2'd1;
 				ALUOp = 3'b010;
 				ALUToPC = 1'b0;
-				MemWrite = 1'b0;
+				d_w = 1'b0;
 				ALUSrc = 1'b1;
 				RegWrite = 1'b1;
 				AuipcLui = 2'd2;
@@ -75,7 +75,7 @@ module CPU_Core(
 				MemtoReg = 2'd0;
 				ALUOp = 3'b010;
 				ALUToPC = 1'b0;
-				MemWrite = 1'b1;
+				d_w = 1'b1;
 				ALUSrc = 1'b1;
 				RegWrite = 1'b0;
 				AuipcLui = 2'd2;
@@ -86,7 +86,7 @@ module CPU_Core(
 				MemtoReg = 2'd0;
 				ALUOp = 3'b100;
 				ALUToPC = 1'b0;
-				MemWrite = 1'b0;
+				d_w = 1'b0;
 				ALUSrc = 1'b0;
 				RegWrite = 1'b0;
 				AuipcLui = 2'd2;
@@ -98,7 +98,7 @@ module CPU_Core(
 				MemtoReg = 2'd0;
 				ALUOp = 3'b010;
 				ALUToPC = 1'b0;
-				MemWrite = 1'b0;
+				d_w = 1'b0;
 				ALUSrc = 1'b1;
 				RegWrite = 1'b1;
 				AuipcLui = 2'd0;
@@ -110,7 +110,7 @@ module CPU_Core(
 				MemtoReg = 2'd0;
 				ALUOp = 3'b010;
 				ALUToPC = 1'b0;
-				MemWrite = 1'b0;
+				d_w = 1'b0;
 				ALUSrc = 1'b1;
 				RegWrite = 1'b1;
 				AuipcLui = 2'd1;
@@ -122,7 +122,7 @@ module CPU_Core(
 				MemtoReg = 2'd2;
 				ALUOp = 3'b101;
 				ALUToPC = 1'b0;
-				MemWrite = 1'b0;
+				d_w = 1'b0;
 				ALUSrc = 1'b0;
 				RegWrite = 1'b1;
 				AuipcLui = 2'd1;
@@ -134,7 +134,7 @@ module CPU_Core(
 				MemtoReg = 2'd0;
 				ALUOp = 3'b010;
 				ALUToPC = 1'b1;
-				MemWrite = 1'b0;
+				d_w = 1'b0;
 				ALUSrc = 1'b1;
 				RegWrite = 1'b1;
 				AuipcLui = 2'd2;
@@ -146,7 +146,7 @@ module CPU_Core(
 				MemtoReg = 2'd0;
 				ALUOp = 2'b00;
 				ALUToPC = 1'b0;
-				MemWrite = 1'b0;
+				d_w = 1'b0;
 				ALUSrc = 1'b0; 
 				RegWrite = 1'b0;
 				AuipcLui = 2'b00;
@@ -173,15 +173,15 @@ module CPU_Core(
 	////////////////////////////////////////////////////// Imm_gen/////////////////////////////////////////////////////
 	always_comb begin 
 		
-		case (Instruction[6:0])
-			7'b0010011: Imm_gen = {Instruction[31], 20'd0, Instruction[30:20]}; //Instruccion tipo I 
-			7'b0000011: Imm_gen = {Instruction[31], 20'd0, Instruction[30:20]}; //Instruccion de carga (LW)
-			7'b0100011: Imm_gen = {Instruction[31], 20'd0 , Instruction[30:25], Instruction[11:7]}; //Instruccion tipo S
-			7'b1100011: Imm_gen = {Instruction[31], 19'd0, Instruction[7], Instruction[30:25], Instruction[11:8], 1'b0}; //Instruccion tipo B
-			7'b0010111: Imm_gen = {Instruction[31:12], 12'd0}; //Instruccion tipo U (AUIPC)
-			7'b0110111: Imm_gen = {Instruction[31:12], 12'd0}; //Instruccion tipo U (LUI)
-			7'b1101111: Imm_gen = {Instruction[31], 11'd0, Instruction[19:12], Instruction[20], Instruction[30:21], 1'b0}; //Instruccion JAL
-			7'b1100111: Imm_gen = {Instruction[31], 20'd0, Instruction[30:20]}; //Instruccion JALR
+		case (idata[6:0])
+			7'b0010011: Imm_gen = {idata[31], 20'd0, idata[30:20]}; //Instruccion tipo I 
+			7'b0000011: Imm_gen = {idata[31], 20'd0, idata[30:20]}; //Instruccion de carga (LW)
+			7'b0100011: Imm_gen = {idata[31], 20'd0 , idata[30:25], idata[11:7]}; //Instruccion tipo S
+			7'b1100011: Imm_gen = {idata[31], 19'd0, idata[7], idata[30:25], idata[11:8], 1'b0}; //Instruccion tipo B
+			7'b0010111: Imm_gen = {idata[31:12], 12'd0}; //Instruccion tipo U (AUIPC)
+			7'b0110111: Imm_gen = {idata[31:12], 12'd0}; //Instruccion tipo U (LUI)
+			7'b1101111: Imm_gen = {idata[31], 11'd0, idata[19:12], idata[20], idata[30:21], 1'b0}; //Instruccion JAL
+			7'b1100111: Imm_gen = {idata[31], 20'd0, idata[30:20]}; //Instruccion JALR
 			default: Imm_gen = 32'd0;
 		endcase
 
@@ -195,7 +195,7 @@ module CPU_Core(
 		case(ALUOp)
 			
 			3'b000: //R
-				case({Instruction[30], Instruction[14:12]})
+				case({idata[30], idata[14:12]})
 
 					4'b0000: opcode = 4'b0000;
 					4'b1000: opcode = 4'b0001;
@@ -212,7 +212,7 @@ module CPU_Core(
 
 			3'b001: //I
 					
-				casex({Instruction[30], Instruction[14:12]})
+				casex({idata[30], idata[14:12]})
 					4'bX000: opcode = 4'b0000;
 					4'bX010: opcode = 4'b0010;
 					4'bX100: opcode = 4'b0110;
@@ -232,7 +232,7 @@ module CPU_Core(
 
 			3'b100: //B
 
-				case (Instruction[14:12])
+				case (idata[14:12])
 					3'b000: opcode = 4'b0001; //BEQ
 					3'b101: opcode = 4'b0011; //BGE
 					default: opcode = 4'b0001;
@@ -261,14 +261,14 @@ module CPU_Core(
 
 		case (MemtoReg)
 			2'd0: write_data = ALU_result;
-			2'd1: write_data = data_DMEM;
+			2'd1: write_data = ddata_r;
 			2'd2: write_data = PC + 32'd4;
 			default: write_data = 32'd0;
 		endcase
 
-		address_DMEM = ALU_result[11:2];
-		address_IMEM = PC[11:2];
-		write_data_DMEM = read_data2;
+		daddr = ALU_result[11:2];
+		iaddr = PC[11:2];
+		ddata_w = read_data2;
 	end
 
 

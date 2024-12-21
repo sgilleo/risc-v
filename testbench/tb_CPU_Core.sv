@@ -283,13 +283,13 @@ module tb_CPU_Core();
     CPU_Core DUV(
         .CLK(CLK), 
         .RSTn(RSTn),
-        .Instruction(Instruction),
-        .data_DMEM(data_DMEM),
-        .address_IMEM(address_IMEM),
-        .address_DMEM(address_DMEM),
-        .write_data_DMEM(write_data_DMEM),
-        .MemWrite(MemWrite),
-        .MemRead(MemRead)
+        .idata(Instruction),
+        .ddata_r(data_DMEM),
+        .iaddr(address_IMEM),
+        .daddr(address_DMEM),
+        .ddata_w(write_data_DMEM),
+        .d_w(MemWrite),
+        .d_r(MemRead)
     );
 
     Estimulos estimulos(
