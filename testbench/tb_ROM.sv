@@ -7,7 +7,7 @@ module tb_ROM;
 
 	ROM DUV(
 	 .address(address),
-	 .instruccion(instruccion)
+	 .instruction(instruccion)
 	);
 	
 	parameter T = 20;
