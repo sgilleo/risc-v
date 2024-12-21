@@ -9,8 +9,8 @@ module tb_REG();
 	logic [31:0] tb_read_data1, tb_read_data2;
 
 	REG DUV(
-		.clk(CLK),
-		.rsta(RSTn),
+		.CLK(CLK),
+		.RSTn(RSTn),
 		.read_reg1(read_reg1),
 		.read_reg2(read_reg2),
 		.write_reg(write_reg),
@@ -73,12 +73,12 @@ module tb_REG();
 
 	reset();
 	
-	escritura(1, 32'hFF);
-	escritura(2, 32'hAA);
+	escritura(1, 32'hFFFFFFFF);
+	escritura(2, 32'hAAAAAAAA);
 	lectura_puerto_1(1, tb_read_data1);
-	assert(tb_read_data1 == 32'hFF) else $error("Error en lectura del puerto 1");
+	assert(tb_read_data1 == 32'hFFFFFFFF) $display("Comprobada lectura y escritura del puerto 1"); else $error("Error en lectura del puerto 1");
 	lectura_puerto_2(2, tb_read_data2);
-	assert(tb_read_data2 == 32'hAA) else $error("Error en lectura del puerto 2");
+	assert(tb_read_data2 == 32'hAAAAAAAA) $display("Comprobada lectura y escritura del puerto 2"); else $error("Error en lectura del puerto 2");
 	$stop;
 	
 	end
