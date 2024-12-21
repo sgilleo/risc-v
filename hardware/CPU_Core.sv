@@ -38,7 +38,7 @@ module CPU_Core(
 			
 			7'b0110011: begin //R-format
 				Branch = 1'b0;
-				MemRead = 1'b0;
+				d_r = 1'b0;
 				MemtoReg = 2'd0;
 				ALUOp = 3'b000;
 				ALUToPC = 1'b0;
@@ -49,7 +49,7 @@ module CPU_Core(
 			end 
 			7'b0010011: begin //I-format 
 				Branch = 1'b0;
-				MemRead = 1'b0;
+				d_r = 1'b0;
 				MemtoReg = 2'd0;
 				ALUOp = 3'b001;
 				ALUToPC = 1'b0;
@@ -60,7 +60,7 @@ module CPU_Core(
 			end 
 			7'b0000011: begin //L-format
 				Branch = 1'b0;
-				MemRead = 1'b1;
+				d_r = 1'b1;
 				MemtoReg = 2'd1;
 				ALUOp = 3'b010;
 				ALUToPC = 1'b0;
@@ -71,7 +71,7 @@ module CPU_Core(
 			end
 			7'b0100011: begin //S-format
 				Branch = 1'b0;
-				MemRead = 1'b0;
+				d_r = 1'b0;
 				MemtoReg = 2'd0;
 				ALUOp = 3'b010;
 				ALUToPC = 1'b0;
@@ -82,7 +82,7 @@ module CPU_Core(
 			end 
 			7'b1100011: begin //B-format
 				Branch = 1'b1;
-				MemRead = 1'b0;
+				d_r = 1'b0;
 				MemtoReg = 2'd0;
 				ALUOp = 3'b100;
 				ALUToPC = 1'b0;
@@ -94,7 +94,7 @@ module CPU_Core(
 
 			7'b0010111: begin //AUIPC
 				Branch = 1'b0;
-				MemRead = 1'b0;
+				d_r = 1'b0;
 				MemtoReg = 2'd0;
 				ALUOp = 3'b010;
 				ALUToPC = 1'b0;
@@ -106,7 +106,7 @@ module CPU_Core(
 
 			7'b0110111: begin //LUI
 				Branch = 1'b0;
-				MemRead = 1'b0;
+				d_r = 1'b0;
 				MemtoReg = 2'd0;
 				ALUOp = 3'b010;
 				ALUToPC = 1'b0;
@@ -118,7 +118,7 @@ module CPU_Core(
 
 			7'b1101111: begin // JAL
 				Branch = 1'b1;
-				MemRead = 1'b0;
+				d_r = 1'b0;
 				MemtoReg = 2'd2;
 				ALUOp = 3'b101;
 				ALUToPC = 1'b0;
@@ -130,7 +130,7 @@ module CPU_Core(
 
 			7'b1100111: begin //JALR
 				Branch = 1'b1;
-				MemRead = 1'b0;
+				d_r = 1'b0;
 				MemtoReg = 2'd0;
 				ALUOp = 3'b010;
 				ALUToPC = 1'b1;
@@ -142,7 +142,7 @@ module CPU_Core(
 			
 			default:  begin 
 				Branch = 1'b0;
-				MemRead = 1'b0;
+				d_r = 1'b0;
 				MemtoReg = 2'd0;
 				ALUOp = 2'b00;
 				ALUToPC = 1'b0;

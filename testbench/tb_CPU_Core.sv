@@ -124,15 +124,15 @@ program Estimulos (CLK, RSTn, Instruction);
 
              @(posedge CLK);
 
-            assert (Instruction[19:15] == DUV.Instruction[19:15]) else $display("El registro de lectura 1 no es correcto");
-            assert (Instruction[24:20] == DUV.Instruction[24:20]) else $display("El registro de lectura 2 no es correcto");
-            assert (Instruction[11:7] == DUV.Instruction[11:7]) else $display("El registro de escritura no es correcto");
+            assert (Instruction[19:15] == DUV.idata[19:15]) else $display("El registro de lectura 1 no es correcto");
+            assert (Instruction[24:20] == DUV.idata[24:20]) else $display("El registro de lectura 2 no es correcto");
+            assert (Instruction[11:7] == DUV.idata[11:7]) else $display("El registro de escritura no es correcto");
             assert (DUV.Branch == 1'b0) else $display("Ha fallado la señal Branch de la unidad de control");
-            assert (DUV.MemRead == 1'b0) else $display("Ha fallado la señal MemRead de la unidad de control");
+            assert (DUV.d_r == 1'b0) else $display("Ha fallado la señal d_r de la unidad de control");
             assert (DUV.MemtoReg == 2'd0) else $display("Ha fallado la señal MemtoReg de la unidad de control");
             assert (DUV.ALUOp == 3'b000) else $display("Ha fallado la señal ALUOp de la unidad de control");
-            assert (DUV.ALUToPC == 1'b0) else $display("Ha fallado la señal ALUToPC de la unidad de control");
-            assert (DUV.MemWrite == 1'b0) else $display("Ha fallado la señal MemWrite de la unidad de control");
+            assert (DUV.ALUToPC == 1'b0) else  $display("Ha fallado la señal ALUToPC de la unidad de control");
+            assert (DUV.d_w == 1'b0) else $display("Ha fallado la señal MemWrite de la unidad de control");
             assert (DUV.ALUSrc == 1'b0) else $display("Ha fallado la señal ALUSrc de la unidad de control");
             assert (DUV.RegWrite == 1'b1) else $display("Ha fallado la señal RegWrite de la unidad de control");
             assert (DUV.AuipcLui == 2'd2) else $display("Ha fallado la señal AuipcLuide la unidad de control");
@@ -166,15 +166,15 @@ program Estimulos (CLK, RSTn, Instruction);
 
             @(posedge CLK);
 
-            assert (Instruction[19:15] == DUV.Instruction[19:15]) else $display("El registro de lectura 1 no es correcto");
+            assert (Instruction[19:15] == DUV.idata[19:15]) else $display("El registro de lectura 1 no es correcto");
             assert ({Instruction[31], 20'd0, Instruction[30:20]} == DUV.Imm_gen) else $display("Ha fallado el generador de inmediatos");
-            assert (Instruction[11:7] == DUV.Instruction[11:7]) else $display("El registro de escritura no es correcto");
+            assert (Instruction[11:7] == DUV.idata[11:7]) else $display("El registro de escritura no es correcto");
             assert (DUV.Branch == 1'b0) else $display("Ha fallado la señal Branch de la unidad de control");
             assert (DUV.ALUToPC == 1'b0) else $display("Ha fallado la señal ALUToPC de la unidad de control");
-            assert (DUV.MemRead == 1'b0) else $display("Ha fallado la señal MemRead de la unidad de control");
+            assert (DUV.d_r == 1'b0) else $display("Ha fallado la señal d_r de la unidad de control");
             assert (DUV.MemtoReg == 2'd0) else $display("Ha fallado la señal MemtoReg de la unidad de control");
             assert (DUV.ALUOp == 3'b001) else $display("Ha fallado la señal ALUOp de la unidad de control");
-            assert (DUV.MemWrite == 1'b0) else $display("Ha fallado la señal MemWrite de la unidad de control");
+            assert (DUV.d_w == 1'b0) else $display("Ha fallado la señal MemWrite de la unidad de control");
             assert (DUV.ALUSrc == 1'b1) else $display("Ha fallado la señal ALUSrc de la unidad de control");
             assert (DUV.RegWrite == 1'b1) else $display("Ha fallado la señal RegWrite de la unidad de control");
             assert (DUV.AuipcLui == 2'd2) else $display("Ha fallado la señal AuipcLuide la unidad de control");
@@ -250,22 +250,13 @@ program Estimulos (CLK, RSTn, Instruction);
 
         repeat(3) @(negedge CLK);
 
-        test_R; $display("Instrucciones tipo R comprobadas");
-
-        repeat(500) @(negedge CLK);
-
         test_I; $display("Instrucciones tipo I comprobadas");
 
-        Instruction = 31'd0;
-        repeat(500) @(negedge CLK);
+        test_R; $display("Instrucciones tipo R comprobadas");
 
         test_L; $display("Instrucciones tipo L comprobadas");
 
-        repeat(500) @(negedge CLK);
-
         test_S; $display("Instrucciones tipo S comprobadas");
-
-        repeat(500) @(negedge CLK);
 
         test_B; $display("Instrucciones tipo B comprobadas");
 
