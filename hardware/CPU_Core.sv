@@ -7,10 +7,10 @@ module CPU_Core(
 );
 
 	logic[2:0] ALUOp;
-	logic [1:0] AuipcLui;
+	logic [1:0] AuipcLui, MemtoReg;
 	logic [3:0] opcode;
 	logic [31:0] PC, Imm_gen, op1, op2, read_data1, read_data2, write_data, ALU_result;
-	logic Branch, MemtoReg, ALUSrc, RegWrite, Zero, ALUToPC;
+	logic Branch, ALUSrc, RegWrite, Zero, ALUToPC;
 
 	ALU alu(
 		.opcode(opcode),
