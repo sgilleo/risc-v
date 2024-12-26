@@ -131,7 +131,7 @@ module CPU_Core(
 			7'b1100111: begin //JALR
 				Branch = 1'b1;
 				d_r = 1'b0;
-				MemtoReg = 2'd0;
+				MemtoReg = 2'd2;
 				ALUOp = 3'b010;
 				ALUToPC = 1'b1;
 				d_w = 1'b0;
