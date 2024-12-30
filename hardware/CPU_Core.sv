@@ -234,8 +234,12 @@ module CPU_Core(
 
 				case (idata[14:12])
 					3'b000: opcode = 4'b0001; //BEQ
+					3'b100: opcode = 4'b1010; //BLT
 					3'b101: opcode = 4'b0010; //BGE
+					3'b110: opcode = 4'b1011; //BLTU
+					3'b111: opcode = 4'b0011; //BGEU
 					default: opcode = 4'b0001;
+      
 				endcase
 			
 
