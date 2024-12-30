@@ -174,14 +174,14 @@ module CPU_Core(
 	always_comb begin 
 		
 		case (idata[6:0])
-			7'b0010011: Imm_gen = {idata[31], 20'd0, idata[30:20]}; //Instruccion tipo I 
-			7'b0000011: Imm_gen = {idata[31], 20'd0, idata[30:20]}; //Instruccion de carga (LW)
-			7'b0100011: Imm_gen = {idata[31], 20'd0 , idata[30:25], idata[11:7]}; //Instruccion tipo S
-			7'b1100011: Imm_gen = {idata[31], 19'd0, idata[7], idata[30:25], idata[11:8], 1'b0}; //Instruccion tipo B
+			7'b0010011: Imm_gen = {21{idata[31]}, idata[30:20]}; //Instruccion tipo I 
+			7'b0000011: Imm_gen = {21{idata[31]}, idata[30:20]}; //Instruccion de carga (LW)
+			7'b0100011: Imm_gen = {21{idata[31]}, idata[30:25], idata[11:7]}; //Instruccion tipo S
+			7'b1100011: Imm_gen = {20{idata[31]}, idata[7], idata[30:25], idata[11:8], 1'b0}; //Instruccion tipo B
 			7'b0010111: Imm_gen = {idata[31:12], 12'd0}; //Instruccion tipo U (AUIPC)
 			7'b0110111: Imm_gen = {idata[31:12], 12'd0}; //Instruccion tipo U (LUI)
-			7'b1101111: Imm_gen = {idata[31], 11'd0, idata[19:12], idata[20], idata[30:21], 1'b0}; //Instruccion JAL
-			7'b1100111: Imm_gen = {idata[31], 20'd0, idata[30:20]}; //Instruccion JALR
+			7'b1101111: Imm_gen = {12{idata[31]}, idata[19:12], idata[20], idata[30:21], 1'b0}; //Instruccion JAL
+			7'b1100111: Imm_gen = {21{idata[31]}, idata[30:20]}; //Instruccion JALR
 			default: Imm_gen = 32'd0;
 		endcase
 
