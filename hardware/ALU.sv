@@ -47,6 +47,10 @@ module ALU(opcode, op1, op2, res, zero);
       /*SRL */ 4'b1000: res = op1 >> op2[4:0];
 		
       /*SRA */ 4'b1001: res = op1 >>> op2[4:0]; // Desplaza a la derecha y pero rellena los huecos con el MSB para mantener el signo
+
+      /*SGE */ 4'b1010: res = ($signed(op1) < $signed(op2)) ? 32'b0 : 32'b1;
+		
+      /*SGEU*/ 4'b1011: res = ($unsigned(op1) < $unsigned(op2)) ? 32'b0 : 32'b1;
 		
       default: res = 32'b0; // Resultado predeterminado por si hubiese un opcode ilegal
 		
