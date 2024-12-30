@@ -13,20 +13,22 @@ module CPU_Core_Pipelined(
     //ETAPA IF/ID
     logic [31:0] Instruction_IFID, PC_IFID;
     //ETAPA ID/EX
-    logic RegWrite_IDEX, MemtoReg_IDEX, Branch_IDEX, MemRead_IDEX, MemWrite_IDEX, ALUSrc_IDEX;
+    logic RegWrite_IDEX, Branch_IDEX, MemRead_IDEX, MemWrite_IDEX, ALUSrc_IDEX, ALUToPC_IDEX;
     logic [2:0] ALUOp_IDEX;
     logic [31:0] PC_IDEX, read_data1_IDEX, read_data2_IDEX, Imm_gen_IDEX;
     logic [3:0] ALUControl_IDEX;
     logic [4:0] write_reg_IDEX;
-    logic [1:0] AuipcLui_IDEX;
+    logic [1:0] AuipcLui_IDEX, MemtoReg_IDEX;
     //ETAPA EX/MEM
-    logic RegWrite_EXMEM, MemtoReg_EXMEM, Branch_EXMEM, MemRead_EXMEM, MemWrite_EXMEM, Zero_EXMEM;
-    logic [31:0] PC_EXMEM, ALU_result_EXMEM, read_data2_EXMEM;
+    logic RegWrite_EXMEM, Branch_EXMEM, MemRead_EXMEM, MemWrite_EXMEM, Zero_EXMEM, ALUToPC_EXMEM;
+    logic [31:0] PC_EXMEM, New_PC_EXMEM, ALU_result_EXMEM, read_data2_EXMEM;
     logic [4:0] write_reg_EXMEM;
+    logic [1:0] MemtoReg_EXMEM;
     //ETAPA MEM/WB
-    logic RegWrite_MEMWB, MemtoReg_MEMWB;
-    logic [31:0] ALU_result_MEMWB, ddata_r_MEMWB;
+    logic RegWrite_MEMWB;
+    logic [31:0] ALU_result_MEMWB, ddata_r_MEMWB, PC_MEMWB;
     logic [4:0] write_reg_MEMWB;
+    logic [1:0] MemtoReg_MEMWB;
 
 	ALU alu(
 		.opcode(opcode),
@@ -55,7 +57,7 @@ module CPU_Core_Pipelined(
             PC_IFID <= 32'd0;
             //ETAPA ID/EX
             RegWrite_IDEX <= 1'b0;
-            MemtoReg_IDEX <= 1'b0;
+            MemtoReg_IDEX <= 2'd0;
             Branch_IDEX <= 1'b0;
             MemRead_IDEX <= 1'b0;
             MemWrite_IDEX <= 1'b0;
@@ -68,23 +70,27 @@ module CPU_Core_Pipelined(
             Imm_gen_IDEX <= 32'd0;
             ALUControl_IDEX <= 4'd0;
             write_reg_IDEX <= 5'd0;
+            ALUToPC_IDEX <= 1'b0;
             //ETAPA EX/MEM
             RegWrite_EXMEM <= 1'b0;
-            MemtoReg_EXMEM <= 1'b0;
+            MemtoReg_EXMEM <= 2'd0;
             Branch_EXMEM <= 1'b0;
             MemRead_EXMEM <= 1'b0;
             MemWrite_EXMEM <= 1'b0;
             Zero_EXMEM <= 1'b0;
             PC_EXMEM <= 32'd0;
+            New_PC_EXMEM <= 32'd0;
             ALU_result_EXMEM <= 32'd0;
             read_data2_EXMEM <= 32'd0;
             write_reg_EXMEM <= 5'd0;
+            ALUToPC_EXMEM <= 1'b0;
             //ETAPA MEM/WB
             RegWrite_MEMWB <= 1'b0;
-            MemtoReg_MEMWB <= 1'b0;
+            MemtoReg_MEMWB <= 2'd0;
             ALU_result_MEMWB <= 32'd0;
             ddata_r_MEMWB <= 32'd0;
             write_reg_MEMWB <= 5'd0;
+            PC_MEMWB <= 32'd0;
         end
 
         else begin
@@ -114,8 +120,9 @@ module CPU_Core_Pipelined(
                 7'b0110011: begin //R-format
                     Branch_IDEX <= 1'b0;
                     MemRead_IDEX <= 1'b0;
-                    MemtoReg_IDEX <= 1'b0;
+                    MemtoReg_IDEX <= 2'd0;
                     ALUOp_IDEX <= 3'b000;
+                    ALUToPC_IDEX <= 1'b0;
                     MemWrite_IDEX <= 1'b0;
                     ALUSrc_IDEX <= 1'b0;
                     RegWrite_IDEX <= 1'b1;
@@ -124,8 +131,9 @@ module CPU_Core_Pipelined(
                 7'b0010011: begin //I-format 
                     Branch_IDEX <= 1'b0;
                     MemRead_IDEX <= 1'b0;
-                    MemtoReg_IDEX <= 1'b0;
+                    MemtoReg_IDEX <= 2'd0;
                     ALUOp_IDEX <= 3'b001;
+                    ALUToPC_IDEX <= 1'b0;
                     MemWrite_IDEX <= 1'b0;
                     ALUSrc_IDEX <= 1'b1;
                     RegWrite_IDEX <= 1'b1;
@@ -134,8 +142,9 @@ module CPU_Core_Pipelined(
                 7'b0000011: begin //L-format
                     Branch_IDEX <= 1'b0;
                     MemRead_IDEX <= 1'b1;
-                    MemtoReg_IDEX <= 1'b1;
+                    MemtoReg_IDEX <= 2'd1;
                     ALUOp_IDEX <= 3'b010;
+                    ALUToPC_IDEX <= 1'b0;
                     MemWrite_IDEX <= 1'b0;
                     ALUSrc_IDEX <= 1'b1;
                     RegWrite_IDEX <= 1'b1;
@@ -144,8 +153,9 @@ module CPU_Core_Pipelined(
                 7'b0100011: begin //S-format
                     Branch_IDEX <= 1'b0;
                     MemRead_IDEX <= 1'b0;
-                    MemtoReg_IDEX <= 1'b0;
+                    MemtoReg_IDEX <= 2'd0;
                     ALUOp_IDEX <= 3'b010;
+                    ALUToPC_IDEX <= 1'b0;
                     MemWrite_IDEX <= 1'b1;
                     ALUSrc_IDEX <= 1'b1;
                     RegWrite_IDEX <= 1'b0;
@@ -154,8 +164,9 @@ module CPU_Core_Pipelined(
                 7'b1100011: begin //B-format
                     Branch_IDEX <= 1'b1;
                     MemRead_IDEX <= 1'b0;
-                    MemtoReg_IDEX <= 1'b0;
+                    MemtoReg_IDEX <= 2'd0;
                     ALUOp_IDEX <= 3'b100;
+                    ALUToPC_IDEX <= 1'b0;
                     MemWrite_IDEX <= 1'b0;
                     ALUSrc_IDEX <= 1'b0;
                     RegWrite_IDEX <= 1'b0;
@@ -165,8 +176,9 @@ module CPU_Core_Pipelined(
                 7'b0010111: begin //AUIPC
                     Branch_IDEX <= 1'b0;
                     MemRead_IDEX <= 1'b0;
-                    MemtoReg_IDEX <= 1'b0;
+                    MemtoReg_IDEX <= 2'd0;
                     ALUOp_IDEX <= 3'b010;
+                    ALUToPC_IDEX <= 1'b0;
                     MemWrite_IDEX <= 1'b0;
                     ALUSrc_IDEX <= 1'b1;
                     RegWrite_IDEX <= 1'b1;
@@ -176,19 +188,45 @@ module CPU_Core_Pipelined(
                 7'b0110111: begin //LUI
                     Branch_IDEX <= 1'b0;
                     MemRead_IDEX <= 1'b0;
-                    MemtoReg_IDEX <= 1'b0;
+                    MemtoReg_IDEX <= 2'd0;
                     ALUOp_IDEX <= 3'b010;
+                    ALUToPC_IDEX <= 1'b0;
                     MemWrite_IDEX <= 1'b0;
                     ALUSrc_IDEX <= 1'b1;
                     RegWrite_IDEX <= 1'b1;
                     AuipcLui_IDEX <= 2'd1;
                 end
 
+                7'b1101111: begin // JAL
+                    Branch_IDEX <= 1'b1;
+                    MemRead_IDEX <= 1'b0;
+                    MemtoReg_IDEX <= 2'd2;
+                    ALUOp_IDEX <= 3'b101;
+                    ALUToPC_IDEX <= 1'b0;
+                    MemWrite_IDEX <= 1'b0;
+                    ALUSrc_IDEX <= 1'b0; 
+                    RegWrite_IDEX <= 1'b1;
+                    AuipcLui_IDEX <= 2'd1;
+                end
+
+                7'b1100111: begin //JALR
+                    Branch_IDEX <= 1'b1;
+                    MemRead_IDEX <= 1'b0;
+                    MemtoReg_IDEX <= 2'd2;
+                    ALUOp_IDEX <= 3'b010;
+                    ALUToPC_IDEX <= 1'b1;
+                    MemWrite_IDEX <= 1'b0;
+                    ALUSrc_IDEX <= 1'b1; 
+                    RegWrite_IDEX <= 1'b1;
+                    AuipcLui_IDEX <= 2'd2;
+                end
+
                 default:  begin 
                     Branch_IDEX <= 1'b0;
                     MemRead_IDEX <= 1'b0;
-                    MemtoReg_IDEX <= 1'b0;
-                    ALUOp_IDEX <= 2'b00;
+                    MemtoReg_IDEX <= 2'd0;
+                    ALUOp_IDEX <= 3'b000;
+                    ALUToPC_IDEX <= 1'b0;
                     MemWrite_IDEX <= 1'b0;
                     ALUSrc_IDEX <= 1'b0; 
                     RegWrite_IDEX <= 1'b0;
@@ -206,10 +244,12 @@ module CPU_Core_Pipelined(
             MemRead_EXMEM <= MemRead_IDEX;
             MemWrite_EXMEM <= MemWrite_IDEX;
             PC_EXMEM <= PC_IDEX + Imm_gen_IDEX;
+            New_PC_EXMEM <= PC_IDEX + 32'd4;
             Zero_EXMEM <= Zero;
             ALU_result_EXMEM <= ALU_result;
             read_data2_EXMEM <= read_data2_IDEX;
             write_reg_EXMEM <= write_reg_IDEX;
+            ALUToPC_EXMEM <= ALUToPC_IDEX;
 
             //ETAPA MEM/WB
             RegWrite_MEMWB <= RegWrite_EXMEM;
@@ -217,7 +257,7 @@ module CPU_Core_Pipelined(
             ddata_r_MEMWB <= ddata_r;
             ALU_result_MEMWB <= ALU_result_EXMEM;
             write_reg_MEMWB <= write_reg_EXMEM;
-
+            PC_MEMWB <= New_PC_EXMEM;
         end
     end
 
@@ -227,7 +267,12 @@ module CPU_Core_Pipelined(
 		if(!RSTn) PC <= 32'd0;
 
 		else begin
-            PC <= (Branch_EXMEM & Zero_EXMEM)? PC_EXMEM : PC + 32'd4;
+            case ({Branch_EXMEM & Zero_EXMEM, ALUToPC_EXMEM})
+                2'b00: PC <= PC + 32'd4;
+                2'b10: PC <= PC_EXMEM;
+                2'b01: PC <= ALU_result_EXMEM;
+                2'b11: PC <= ALU_result_EXMEM;
+            endcase
 		end
 
 	end	
@@ -302,7 +347,12 @@ module CPU_Core_Pipelined(
 
 	always_comb begin
 		op2 = (ALUSrc_IDEX)? Imm_gen_IDEX : read_data2_IDEX;
-        write_data = (MemtoReg_MEMWB)? ddata_r_MEMWB: ALU_result_MEMWB;
+        case (MemtoReg_MEMWB)
+            2'd0: write_data = ALU_result_MEMWB;
+            2'd1: write_data = ddata_r_MEMWB;
+            2'd2: write_data = PC_MEMWB;
+            default: write_data = 32'd0;
+        endcase
 
         case (AuipcLui_IDEX)
             2'd0: op1 = PC_IDEX;
