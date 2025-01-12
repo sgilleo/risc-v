@@ -1,6 +1,6 @@
 `timescale 1ns/1ns
 
-module tb_CPU_Pipelined();
+module tb_Sorting_Pipelined();
 
     logic CLK, RSTn;
 
