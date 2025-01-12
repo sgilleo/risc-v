@@ -17,7 +17,7 @@ module tb_CPU_Pipelined();
         .read_data(data_DMEM)
     );
 
-    ROM #(.file("D:\\UNIVERSIDAD\\3TELECO\\ISDIGI\\risc-v\\assembly\\fibonacci_pipelined.hex")) rom(
+    ROM #(.file("D:\\UNIVERSIDAD\\3TELECO\\ISDIGI\\risc-v\\assembly\\fibonacci_segmentado.hex")) rom(
         .address(address_IMEM),
         .instruction(Instruction)
     );
@@ -55,7 +55,7 @@ module tb_CPU_Pipelined();
 
         reset();
 
-        repeat (1000) @(negedge CLK);
+        wait(Instruction == 32'd0);
         
         $stop();
 
