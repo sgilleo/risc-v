@@ -1,6 +1,6 @@
 `timescale 1ns/1ns
 
-module tb_CPU_Pipelined();
+module tb_Sorting_Pipelined();
 
     logic CLK, RSTn;
 
@@ -17,7 +17,7 @@ module tb_CPU_Pipelined();
         .read_data(data_DMEM)
     );
 
-    ROM #(.file("D:\\UNIVERSIDAD\\3TELECO\\ISDIGI\\risc-v\\assembly\\selection_sort_pipelined.hex")) rom(
+    ROM #(.file("D:\\UNIVERSIDAD\\3TELECO\\ISDIGI\\risc-v\\assembly\\sorting_segmentado.hex")) rom(
         .address(address_IMEM),
         .instruction(Instruction)
     );
@@ -55,7 +55,7 @@ module tb_CPU_Pipelined();
 
         reset();
 
-        repeat (1000) @(negedge CLK);
+        wait(Instruction == 32'd0);
         
         $stop();
 
