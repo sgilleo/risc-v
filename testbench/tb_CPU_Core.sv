@@ -212,7 +212,7 @@ program Estimulos (CLK, RSTn, Instruction);
             @(posedge CLK);
 
             assert (Instruction[19:15] == DUV.idata[19:15]) else $display("El registro de lectura 1 no es correcto");
-            assert ({Instruction[31], 20'd0, Instruction[30:20]} == DUV.Imm_gen) else $display("Ha fallado el generador de inmediatos");
+            assert ({{21{Instruction[31]}}, Instruction[30:20]} == DUV.Imm_gen) else $display("Ha fallado el generador de inmediatos");
             assert (Instruction[11:7] == DUV.idata[11:7]) else $display("El registro de escritura no es correcto");
             assert (DUV.Branch == 1'b0) else $display("Ha fallado la señal Branch de la unidad de control");
             assert (DUV.ALUToPC == 1'b0) else $display("Ha fallado la señal ALUToPC de la unidad de control");
@@ -249,7 +249,7 @@ program Estimulos (CLK, RSTn, Instruction);
 
             @(posedge CLK);
             
-            assert ({Instruction[31], 20'd0, Instruction[30:20]} == DUV.Imm_gen) else $display("Ha fallado el generador de inmediatos");
+            assert ({{21{Instruction[31]}}, Instruction[30:20]} == DUV.Imm_gen) else $display("Ha fallado el generador de inmediatos");
             assert (Instruction[19:15] == DUV.idata[19:15]) else $display("El registro de lectura 1 no es correcto");
             assert (Instruction[11:7] == DUV.idata[11:7]) else $display("El registro de escritura no es correcto");
             assert (DUV.Branch == 1'b0) else $display("Ha fallado la señal Branch de la unidad de control");
@@ -279,7 +279,7 @@ program Estimulos (CLK, RSTn, Instruction);
 
             @(posedge CLK);
 
-            assert ({Instruction[31], 20'd0 , Instruction[30:25], Instruction[11:7]} == DUV.Imm_gen) else $display("Ha fallado el generador de inmediatos");
+            assert ({{21{Instruction[31]}}, Instruction[30:25], Instruction[11:7]} == DUV.Imm_gen) else $display("Ha fallado el generador de inmediatos");
             assert (Instruction[19:15] == DUV.idata[19:15]) else $display("El registro de lectura 1 no es correcto");
             assert (Instruction[24:20] == DUV.idata[24:20]) else $display("El registro de lectura 2 no es correcto");
             assert (DUV.Branch == 1'b0) else $display("Ha fallado la señal Branch de la unidad de control");
@@ -309,7 +309,7 @@ program Estimulos (CLK, RSTn, Instruction);
 
             @(posedge CLK);
 
-            assert ({Instruction[31], 19'd0, Instruction[7], Instruction[30:25], Instruction[11:8], 1'b0} == DUV.Imm_gen) else $display("Ha fallado el generador de inmediatos");
+            assert ({{20{Instruction[31]}}, Instruction[7], Instruction[30:25], Instruction[11:8], 1'b0} == DUV.Imm_gen) else $display("Ha fallado el generador de inmediatos");
             assert (Instruction[19:15] == DUV.idata[19:15]) else $display("El registro de lectura 1 no es correcto");
             assert (Instruction[24:20] == DUV.idata[24:20]) else $display("El registro de lectura 2 no es correcto");
             assert (DUV.Branch == 1'b1) else $display("Ha fallado la señal Branch de la unidad de control");
@@ -323,8 +323,11 @@ program Estimulos (CLK, RSTn, Instruction);
             assert (DUV.AuipcLui == 2'd2) else $display("Ha fallado la señal AuipcLui de la unidad de control");
 
             case(Instruction[14:12])
-                3'b000: assert (DUV.opcode == 4'b0001) else $display("El codigo de operacion no ha coincidido");
-                3'b101: assert (DUV.opcode == 4'b0011) else $display("El codigo de operacion no ha coincidido");
+                3'b000: assert (DUV.opcode == 4'b0001) else $display("El codigo de operacion no ha coincidido"); //BEQ
+                3'b100: assert (DUV.opcode == 4'b1010) else $display("El codigo de operacion no ha coincidido"); //BLT
+                3'b101: assert (DUV.opcode == 4'b0010) else $display("El codigo de operacion no ha coincidido"); //BGE
+                3'b110: assert (DUV.opcode == 4'b1011) else $display("El codigo de operacion no ha coincidido"); //BLTU
+                3'b111: assert (DUV.opcode == 4'b0011) else $display("El codigo de operacion no ha coincidido"); //BGEU
             endcase
 
             @(negedge CLK);
@@ -372,7 +375,7 @@ program Estimulos (CLK, RSTn, Instruction);
 
             @(posedge CLK);
 
-            assert ({Instruction[31], 11'd0, Instruction[19:12], Instruction[20], Instruction[30:21], 1'b0} == DUV.Imm_gen) else $display("Ha fallado el generador de inmediatos");
+            assert ({{12{Instruction[31]}}, Instruction[19:12], Instruction[20], Instruction[30:21], 1'b0} == DUV.Imm_gen) else $display("Ha fallado el generador de inmediatos");
             assert (Instruction[11:7] == DUV.idata[11:7]) else $display("El registro de escritura no es correcto");
             assert (DUV.Branch == 1'b1) else $display("Ha fallado la señal Branch de la unidad de control");
             assert (DUV.d_r == 1'b0) else $display("Ha fallado la señal d_r de la unidad de control");
@@ -401,7 +404,7 @@ program Estimulos (CLK, RSTn, Instruction);
 
         @(posedge CLK);
 
-        assert({Instruction[31], 20'd0, Instruction[30:20]} == DUV.Imm_gen) else $display("Ha fallado el generador de inmediatos");
+        assert({{21{Instruction[31]}}, Instruction[30:20]} == DUV.Imm_gen) else $display("Ha fallado el generador de inmediatos");
         assert (Instruction[19:15] == DUV.idata[19:15]) else $display("El registro de lectura 1 no es correcto");
         assert (Instruction[11:7] == DUV.idata[11:7]) else $display("El registro de escritura no es correcto");
         assert (DUV.Branch == 1'b1) else $display("Ha fallado la señal Branch de la unidad de control");
