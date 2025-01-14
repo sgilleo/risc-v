@@ -1,5 +1,8 @@
 # RISC-V Verilog
 
+![Ilustración_sin_título](https://github.com/user-attachments/assets/b08f9e92-f73c-49f4-852c-741433ff9d25)
+
+
 Un procesador basado en la arquitectura RISC-V 32I diseñado en Verilog para las prácticas de la asignatura ISDIGI.
 
 ## Descripcion
