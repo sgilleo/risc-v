@@ -160,7 +160,7 @@ module CPU_Core(
 		if(!RSTn) PC <= 32'd0;
 
 		else begin
-			case ({Branch & Zero, ALUToPC})
+			casex ({Branch & Zero, ALUToPC})
 				2'b00: PC <= PC + 32'd4;
 				2'b10: PC <= PC + Imm_gen;
 				2'bX1: PC <= ALU_result;
