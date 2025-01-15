@@ -175,8 +175,8 @@ program Estimulos (CLK, RSTn, Instruction);
             
             //ID/EX Stage
             @(posedge CLK);
-            assert (Instruction[19:15] == DUV.read_data1_IDEX) else $display("El registro de lectura 1 no es correcto en la etapa ID/EX");
-            assert (Instruction[24:20] == DUV.read_data2_IDEX) else $display("El registro de lectura 2 no es correcto en la etapa ID/EX");
+            assert (Instruction[19:15] == DUV.Instruction_IFID[19:15]) else $display("El registro de lectura 1 no es correcto en la etapa ID/EX");
+            assert (Instruction[24:20] == DUV.Instruction_IFID[24:20]) else $display("El registro de lectura 2 no es correcto en la etapa ID/EX");
             assert (Instruction[11:7] == DUV.write_reg_IDEX) else $display("El registro de escritura no es correcto en la etapa ID/EX");
             assert (DUV.Branch_IDEX == 1'b0) else $display("Ha fallado la señal Branch de la unidad de control en la etapa ID/EX");
             assert (DUV.MemtoReg_IDEX == 2'd0) else $display("Ha fallado la señal MemtoReg de la unidad de control en la etapa ID/EX");
@@ -220,7 +220,7 @@ program Estimulos (CLK, RSTn, Instruction);
             
             //ID/EX Stage
             @(posedge CLK);
-            assert (Instruction[19:15] == DUV.read_data1_IDEX) else $display("El registro de lectura 1 no es correcto en la etapa ID/EX");
+            assert (Instruction[19:15] == DUV.Instruction_IFID[19:15]) else $display("El registro de lectura 1 no es correcto en la etapa ID/EX");
             assert ({{21{Instruction[31]}}, Instruction[30:20]} == DUV.Imm_gen_IDEX) else $display("Ha fallado el generador de inmediatos en la etapa ID/EX");
             assert (Instruction[11:7] == DUV.write_reg_IDEX) else $display("El registro de escritura no es correcto en la etapa ID/EX");
             assert (DUV.Branch_IDEX == 1'b0) else $display("Ha fallado la señal Branch de la unidad de control en la etapa ID/EX");
@@ -262,7 +262,7 @@ program Estimulos (CLK, RSTn, Instruction);
             //ID/EX Stage
             @(posedge CLK);
             assert ({{21{Instruction[31]}}, Instruction[30:20]} == DUV.Imm_gen_IDEX) else $display("Ha fallado el generador de inmediatos en la etapa ID/EX");
-            assert (Instruction[19:15] == DUV.read_data1_IDEX) else $display("El registro de lectura 1 no es correcto en la etapa ID/EX");
+            assert (Instruction[19:15] == DUV.Instruction_IFID[19:15]) else $display("El registro de lectura 1 no es correcto en la etapa ID/EX");
             assert (Instruction[11:7] == DUV.write_reg_IDEX) else $display("El registro de escritura no es correcto en la etapa ID/EX");
             assert (DUV.Branch_IDEX == 1'b0) else $display("Ha fallado la señal Branch de la unidad de control en la etapa ID/EX");
             assert (DUV.MemtoReg_IDEX == 2'd1) else $display("Ha fallado la señal MemtoReg de la unidad de control en la etapa ID/EX");
@@ -300,8 +300,8 @@ program Estimulos (CLK, RSTn, Instruction);
             //ID/EX Stage
              @(posedge CLK);
             assert ({{21{Instruction[31]}}, Instruction[30:25], Instruction[11:7]} == DUV.Imm_gen_IDEX) else $display("Ha fallado el generador de inmediatos en la etapa ID/EX");
-            assert (Instruction[19:15] == DUV.read_data1_IDEX) else $display("El registro de lectura 1 no es correcto en la etapa ID/EX");
-            assert (Instruction[24:20] == DUV.read_data2_IDEX) else $display("El registro de lectura 2 no es correcto en la etapa ID/EX");
+            assert (Instruction[19:15] == DUV.Instruction_IFID[19:15]) else $display("El registro de lectura 1 no es correcto en la etapa ID/EX");
+            assert (Instruction[24:20] == DUV.Instruction_IFID[24:20]) else $display("El registro de lectura 2 no es correcto en la etapa ID/EX");
             assert (DUV.Branch_IDEX == 1'b0) else $display("Ha fallado la señal Branch de la unidad de control en la etapa ID/EX");
             assert (DUV.MemtoReg_IDEX == 2'd0) else $display("Ha fallado la señal MemtoReg de la unidad de control en la etapa ID/EX");
             assert (DUV.ALUOp_IDEX == 3'b010) else $display("Ha fallado la señal ALUOp de la unidad de control en la etapa ID/EX");
@@ -338,8 +338,8 @@ program Estimulos (CLK, RSTn, Instruction);
             //ID/EX Stage
             @(posedge CLK);
             assert ({{20{Instruction[31]}}, Instruction[7], Instruction[30:25], Instruction[11:8], 1'b0} == DUV.Imm_gen_IDEX) else $display("Ha fallado el generador de inmediatos en la etapa ID/EX");
-            assert (Instruction[19:15] == DUV.read_data1_IDEX) else $display("El registro de lectura 1 no es correcto en la etapa ID/EX");
-            assert (Instruction[24:20] == DUV.read_data2_IDEX) else $display("El registro de lectura 2 no es correcto en la etapa ID/EX");
+            assert (Instruction[19:15] == DUV.Instruction_IFID[19:15]) else $display("El registro de lectura 1 no es correcto en la etapa ID/EX %d /= %d", Instruction[19:15], DUV.read_data1_IDEX[4:0]);
+            assert (Instruction[24:20] == DUV.Instruction_IFID[24:20]) else $display("El registro de lectura 2 no es correcto en la etapa ID/EX");
             assert (DUV.Branch_IDEX == 1'b1) else $display("Ha fallado la señal Branch de la unidad de control en la etapa ID/EX");
             assert (DUV.MemtoReg_IDEX == 2'd0) else $display("Ha fallado la señal MemtoReg de la unidad de control en la etapa ID/EX");
             assert (DUV.ALUOp_IDEX == 3'b100) else $display("Ha fallado la señal ALUOp de la unidad de control en la etapa ID/EX");
@@ -361,7 +361,7 @@ program Estimulos (CLK, RSTn, Instruction);
         end
     endtask
 
-    task test_U;
+    task test_U;//Lo comprueba correctamente
         uinst.opcode.constraint_mode(1);
         while(ucov.get_coverage() < 100) begin
             assert(uinst.randomize()) else $error("Error en randomizacion de instruccion tipo U");
@@ -419,7 +419,7 @@ program Estimulos (CLK, RSTn, Instruction);
             assert (DUV.AuipcLui_IDEX == 2'd1) else $display("Ha fallado la señal AuipcLui de la unidad de control en la etapa ID/EX");
              
              //MEM/WB Stage
-            @(posedge CLK);
+            repeat (2) @(posedge CLK);
             assert (DUV.write_data == DUV.PC_MEMWB) else $display("No se ha guardado el valor correcto en la instruccion JAL");
 
 
@@ -444,7 +444,7 @@ program Estimulos (CLK, RSTn, Instruction);
          //ID/EX Stage
         @(posedge CLK);
         assert({{21{Instruction[31]}}, Instruction[30:20]} == DUV.Imm_gen_IDEX) else $display("Ha fallado el generador de inmediatos en la etapa ID/EX");
-        assert (Instruction[19:15] == DUV.read_data1_IDEX) else $display("El registro de lectura 1 no es correcto en la etapa ID/EX");
+        assert (Instruction[19:15] == DUV.Instruction_IFID[19:15]) else $display("El registro de lectura 1 no es correcto en la etapa ID/EX asdf");
         assert (Instruction[11:7] == DUV.write_reg_IDEX) else $display("El registro de escritura no es correcto en la etapa ID/EX");
         assert (DUV.Branch_IDEX == 1'b1) else $display("Ha fallado la señal Branch de la unidad de control en la etapa ID/EX");
         assert (DUV.MemtoReg_IDEX == 2'd2) else $display("Ha fallado la señal MemtoReg de la unidad de control en la etapa ID/EX");
@@ -457,7 +457,7 @@ program Estimulos (CLK, RSTn, Instruction);
         assert (DUV.AuipcLui_IDEX == 2'd2) else $display("Ha fallado la señal AuipcLui de la unidad de control en la etapa ID/EX");
         
         //MEM/WB Stage
-            @(posedge CLK);
+        @(posedge CLK);
         assert (DUV.write_data == DUV.PC_MEMWB) else $display("No se ha guardado el valor correcto en la instruccion JALR");
 
         @(negedge CLK);
@@ -513,7 +513,7 @@ program Estimulos (CLK, RSTn, Instruction);
 endprogram
 
 
-module tb_CPU_Core();
+module tb_CPU_Core_Pipelined();
     logic CLK, RSTn, MemWrite, MemRead;
     logic [9:0] address_DMEM, address_IMEM;
     logic [31:0] Instruction, data_DMEM, write_data_DMEM;
