@@ -17,7 +17,7 @@ module tb_Sorting_Pipelined();
         .read_data(data_DMEM)
     );
 
-    ROM #(.file("D:\\UNIVERSIDAD\\3TELECO\\ISDIGI\\risc-v\\assembly\\sorting_segmentado.hex")) rom(
+    ROM #(.file("assembly/sorting_segmentado.hex")) rom(
         .address(address_IMEM),
         .instruction(Instruction)
     );

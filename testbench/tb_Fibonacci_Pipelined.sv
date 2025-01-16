@@ -17,7 +17,7 @@ module tb_Fibonacci_Pipelined();
         .read_data(data_DMEM)
     );
 
-    ROM #(.file("D:\\UNIVERSIDAD\\3TELECO\\ISDIGI\\risc-v\\assembly\\fibonacci_segmentado.hex")) rom(
+    ROM #(.file("assembly/fibonacci_segmentado.hex")) rom(
         .address(address_IMEM),
         .instruction(Instruction)
     );

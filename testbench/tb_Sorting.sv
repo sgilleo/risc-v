@@ -17,7 +17,7 @@ module tb_Sorting();
         .read_data(data_DMEM)
     );
 
-    ROM #(.file("D:\\UNIVERSIDAD\\3TELECO\\ISDIGI\\risc-v\\assembly\\sorting.hex")) rom(
+    ROM #(.file("assembly/sorting.hex")) rom(
         .address(address_IMEM),
         .instruction(Instruction)
     );
