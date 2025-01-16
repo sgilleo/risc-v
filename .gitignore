@@ -1,4 +1,4 @@
 work/
 vsim.wlf
 quartus/*
-!quartus/riscv.qar
+!quartus/TinuC.qar
